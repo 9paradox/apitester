@@ -1,3 +1,3 @@
 export const apitester = () => {
-  return "coming soon";
+  return 'coming soon';
 };
