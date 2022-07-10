@@ -1,5 +1,5 @@
 import axios from 'axios';
-import * as Eta from "eta";
+import * as Eta from 'eta';
 import * as JemsPath from 'jmespath';
 
 interface Step {
@@ -31,6 +31,10 @@ async function get(url: string): Promise<any> {
 
 function getQueryLang(query: string): { lang: QueryLang; query: string } {
   const querySegment = query.split('@$');
+
+  if (querySegment.length <= 1)
+    return { lang: QueryLang.jmespath, query: query.trim() };
+
   const lang = querySegment[0].trim();
   const queryStr = querySegment[1].trim();
   switch (lang) {
@@ -52,7 +56,10 @@ async function pickJsonData(data: any, query: string): Promise<any> {
 }
 
 async function formatData(templateData: any, inputData: any): Promise<any> {
-  const dataStr = typeof templateData != "string" ? JSON.stringify(templateData) : templateData;
+  const dataStr =
+    typeof templateData != 'string'
+      ? JSON.stringify(templateData)
+      : templateData;
   return await Eta.render(dataStr, inputData);
 }
 
@@ -122,17 +129,23 @@ class TestCase implements IActions {
           break;
 
         case 'withLastStep_pickData':
-          outputData = await pickJsonData(lastStep.outputData, currentStep.inputData);
+          outputData = await pickJsonData(
+            lastStep.outputData,
+            currentStep.inputData
+          );
           break;
-          
+
         case 'withLastStep_formatData':
-          outputData = await formatData(currentStep.inputData, lastStep.outputData);
+          outputData = await formatData(
+            currentStep.inputData,
+            lastStep.outputData
+          );
           break;
 
         default:
           throw new Error(`'${currentStep.action}' method is not implemented.`);
       }
-      
+
       this.setOutputData(currentStep.index, outputData);
     }
   }
