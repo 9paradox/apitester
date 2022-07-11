@@ -3,7 +3,9 @@ import { apitester } from '../src/index';
 describe('apitester', () => {
   it('should perform overall test actions and verifications', async () => {
     try {
-      const test = apitester.setup('should perform overall test actions and verifications');
+      const test = apitester.setup(
+        'should perform overall test actions and verifications'
+      );
 
       const testResult = await test
         .simpleGet('https://jsonplaceholder.typicode.com/todos/')
