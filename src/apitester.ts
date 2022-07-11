@@ -2,11 +2,32 @@ import axios from 'axios';
 import * as Eta from 'eta';
 import * as JemsPath from 'jmespath';
 
+enum StepType {
+  Action = 'Action',
+  Verification = 'Verification',
+}
+
+type Optional<T> = T | undefined;
+
 interface Step {
   index: number;
+  type: StepType;
   action: ActionName;
   inputData: any;
   outputData: any;
+  verified: Optional<boolean>;
+}
+
+interface TestCaseResult {
+  success: boolean;
+  totalSteps: number;
+  executedSteps: number;
+  lastExecutedStep: number;
+  totalVerificationSteps: number;
+  executedVerificationSteps: number;
+  totalSuccessfulVerificationSteps: number;
+  lastVerificationStep: number;
+  steps: Step[];
 }
 
 interface IActions {
@@ -14,8 +35,11 @@ interface IActions {
   withLastStep_simpleGet(): TestCase;
   withLastStep_pickData(query: string): TestCase;
   withLastStep_formatData(templateData: string): TestCase;
+  withLastStep_pickAndVerify(query: string, expected: any): TestCase;
+  withLastStep_Verify(expected: any): TestCase;
+  pickStep(index: number): TestCase;
   getStep(index: number): Step;
-  test(): Promise<void>;
+  test(): Promise<TestCaseResult>;
 }
 
 type ActionName = keyof IActions | 'TEST_CASE';
@@ -23,6 +47,11 @@ type ActionName = keyof IActions | 'TEST_CASE';
 enum QueryLang {
   jmespath = 'jmespath',
   jsonata = 'jsonata',
+}
+
+interface VerificationResult {
+  verified: boolean;
+  actualData: any;
 }
 
 async function get(url: string): Promise<any> {
@@ -63,6 +92,24 @@ async function formatData(templateData: any, inputData: any): Promise<any> {
   return await Eta.render(dataStr, inputData);
 }
 
+async function pickDataAndVerify(
+  inputData: any,
+  query: string,
+  expectedData: any
+): Promise<VerificationResult> {
+  const actualData = await pickJsonData(inputData, query);
+  const areEqual = JSON.stringify(actualData) === JSON.stringify(expectedData);
+  return { verified: areEqual, actualData };
+}
+
+async function verify(
+  actualData: any,
+  expectedData: any
+): Promise<VerificationResult> {
+  const areEqual = JSON.stringify(actualData) === JSON.stringify(expectedData);
+  return { verified: areEqual, actualData };
+}
+
 class TestCase implements IActions {
   steps: Step[];
   stepIndex: number;
@@ -71,26 +118,46 @@ class TestCase implements IActions {
     this.steps = [
       {
         action: 'TEST_CASE',
+        type: StepType.Action,
         index: 0,
         inputData: title,
         outputData: {},
+        verified: undefined,
       },
     ];
     this.stepIndex = 0;
   }
 
+  withLastStep_Verify(expected: any): TestCase {
+    this.recordStep('withLastStep_Verify', StepType.Verification, expected);
+    return this;
+  }
+
+  pickStep(index: number): TestCase {
+    this.recordStep('pickStep', StepType.Action, index);
+    return this;
+  }
+
+  withLastStep_pickAndVerify(query: string, expected: any): TestCase {
+    this.recordStep('withLastStep_pickAndVerify', StepType.Verification, {
+      query: query,
+      expected: expected,
+    });
+    return this;
+  }
+
   withLastStep_formatData(templateData: string): TestCase {
-    this.recordStep('withLastStep_formatData', templateData);
+    this.recordStep('withLastStep_formatData', StepType.Action, templateData);
     return this;
   }
 
   withLastStep_simpleGet(): TestCase {
-    this.recordStep('withLastStep_simpleGet', null);
+    this.recordStep('withLastStep_simpleGet', StepType.Action, null);
     return this;
   }
 
   withLastStep_pickData(query: string): TestCase {
-    this.recordStep('withLastStep_pickData', query);
+    this.recordStep('withLastStep_pickData', StepType.Action, query);
     return this;
   }
 
@@ -100,21 +167,48 @@ class TestCase implements IActions {
   }
 
   simpleGet(url: string): TestCase {
-    this.recordStep('simpleGet', url);
+    this.recordStep('simpleGet', StepType.Action, url);
     return this;
   }
 
-  async test(): Promise<void> {
+  async test(): Promise<TestCaseResult> {
     return await this._test();
   }
 
-  async _test(): Promise<void> {
+  async _test(): Promise<TestCaseResult> {
     const totalSteps = this.steps.length;
+
+    const totalVerificationSteps = this.steps.filter(
+      (s) => s.type == StepType.Verification
+    ).length;
+
+    var testCaseStatus: TestCaseResult = {
+      success: false,
+      totalSteps: totalSteps,
+      executedSteps: 0,
+      lastExecutedStep: 0,
+      totalVerificationSteps: totalVerificationSteps,
+      executedVerificationSteps: 0,
+      totalSuccessfulVerificationSteps: 0,
+      lastVerificationStep: 0,
+      steps: [...this.steps],
+    };
+
     for (let index = 1; index < totalSteps; index++) {
       const currentStep = this.getStep(index);
       const lastStep = this.getStep(index - 1);
 
+      var inputData: any = null;
       var outputData: any;
+      var verified: Optional<boolean> = undefined;
+
+      testCaseStatus.executedSteps++;
+      testCaseStatus.lastExecutedStep = index;
+
+      if (currentStep.type == StepType.Verification) {
+        testCaseStatus.executedVerificationSteps++;
+        testCaseStatus.lastVerificationStep = index;
+      }
 
       switch (currentStep.action) {
         case 'TEST_CASE':
@@ -125,6 +219,7 @@ class TestCase implements IActions {
           break;
 
         case 'withLastStep_simpleGet':
+          inputData = lastStep.outputData;
           outputData = await get(lastStep.outputData);
           break;
 
@@ -142,21 +237,63 @@ class TestCase implements IActions {
           );
           break;
 
+        case 'withLastStep_pickAndVerify':
+          outputData = await pickDataAndVerify(
+            lastStep.outputData,
+            currentStep.inputData.query,
+            currentStep.inputData.expected
+          );
+          verified = outputData.verified;
+          break;
+
+        case 'pickStep':
+          outputData = this.getStep(currentStep.inputData).outputData;
+          break;
+
+        case 'withLastStep_Verify':
+          outputData = await verify(lastStep.outputData, currentStep.inputData);
+          verified = outputData.verified;
+          break;
+
         default:
           throw new Error(`'${currentStep.action}' method is not implemented.`);
       }
 
       this.setOutputData(currentStep.index, outputData);
+
+      if (verified !== undefined)
+        this.setStepVerifiedStatus(currentStep.index, verified);
+
+      if (inputData) this.setInputData(currentStep.index, inputData);
     }
+
+    testCaseStatus.steps = [...this.steps];
+
+    testCaseStatus.totalSuccessfulVerificationSteps = this.steps.filter(
+      (s) => s.type == StepType.Verification && s.verified == true
+    ).length;
+
+    testCaseStatus.success =
+      testCaseStatus.totalSuccessfulVerificationSteps ==
+      testCaseStatus.totalVerificationSteps;
+
+    return testCaseStatus;
   }
 
-  recordStep(action: ActionName, data: any): void {
+  recordStep(
+    action: ActionName,
+    type: StepType,
+    data: any,
+    verified: Optional<boolean> = undefined
+  ): void {
     this.stepIndex++;
     this.steps.push({
       index: this.stepIndex,
-      action: action,
+      type,
+      action,
       inputData: data,
       outputData: null,
+      verified,
     });
   }
 
@@ -168,6 +305,16 @@ class TestCase implements IActions {
   setOutputData(index: number, data: any): void {
     this.validateIndexOrThrow(index);
     this.steps[index].outputData = data;
+  }
+
+  setInputData(index: number, data: any): void {
+    this.validateIndexOrThrow(index);
+    this.steps[index].inputData = data;
+  }
+
+  setStepVerifiedStatus(index: number, verified: Optional<boolean>): void {
+    this.validateIndexOrThrow(index);
+    this.steps[index].verified = verified;
   }
 }
 
