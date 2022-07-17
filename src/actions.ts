@@ -7,7 +7,10 @@ export async function get(url: string): Promise<any> {
   return await axios.get(url);
 }
 
-export function getQueryLang(query: string): { lang: QueryLang; query: string } {
+export function getQueryLang(query: string): {
+  lang: QueryLang;
+  query: string;
+} {
   const querySegment = query.split('@$');
 
   if (querySegment.length <= 1)
@@ -33,7 +36,10 @@ export async function pickJsonData(data: any, query: string): Promise<any> {
   return null;
 }
 
-export async function formatData(templateData: any, inputData: any): Promise<any> {
+export async function formatData(
+  templateData: any,
+  inputData: any
+): Promise<any> {
   const dataStr =
     typeof templateData != 'string'
       ? JSON.stringify(templateData)

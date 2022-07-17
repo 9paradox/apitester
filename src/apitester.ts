@@ -1,5 +1,5 @@
-import TestCase from "./testcase";
-import { Step, TestCaseResult } from "./types";
+import TestCase from './testcase';
+import { Step, TestCaseResult } from './types';
 
 export interface IActions {
   simpleGet(url: string): TestCase;

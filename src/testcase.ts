@@ -1,6 +1,12 @@
-import { get, pickJsonData, formatData, pickDataAndVerify, verify } from "./actions";
-import { IActions } from "./apitester";
-import { Step, StepType, TestCaseResult, Optional, ActionName } from "./types";
+import {
+  get,
+  pickJsonData,
+  formatData,
+  pickDataAndVerify,
+  verify,
+} from './actions';
+import { IActions } from './apitester';
+import { Step, StepType, TestCaseResult, Optional, ActionName } from './types';
 
 export default class TestCase implements IActions {
   steps: Step[];
