@@ -1,4 +1,4 @@
-import { apitester } from '../src/index';
+import apitester from '../src/apitester';
 
 describe('apitester', () => {
   it('should perform overall test actions and verifications', async () => {
