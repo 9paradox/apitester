@@ -17,10 +17,8 @@ interface ApiTester {
   setup: (title: string) => IActions;
 }
 
-const apitester: ApiTester = {
+export const apitester: ApiTester = {
   setup: (title: string) => {
     return new TestCase(title);
   },
 };
-
-export default apitester;
