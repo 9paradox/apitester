@@ -5,7 +5,7 @@
     "types"
   ],
   "compilerOptions": {
-    "module": "esnext",
+    "module": "ESNext",
     "moduleResolution": "node",
   },
 }
