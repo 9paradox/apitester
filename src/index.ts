@@ -1,3 +1,2 @@
-export const apitester = () => {
-  return 'coming soon';
-};
+import { apitester } from './apitester';
+export default apitester;
