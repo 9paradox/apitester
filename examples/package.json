@@ -1,0 +1,14 @@
+{
+  "name": "apitester-examples",
+  "version": "0.0.1",
+  "description": "Example for using apitester package",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "author": "Paradox",
+  "license": "MIT",
+  "dependencies": {
+    "@9paradox/apitester": "^0.0.2"
+  }
+}
