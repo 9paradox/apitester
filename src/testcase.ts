@@ -33,8 +33,8 @@ export default class TestCase implements IActions {
     this.stepIndex = 0;
   }
 
-  withLastStep_Verify(expected: any): TestCase {
-    this.recordStep('withLastStep_Verify', StepType.Verification, expected);
+  verify(expected: any): TestCase {
+    this.recordStep('verify', StepType.Verification, expected);
     return this;
   }
 
@@ -43,21 +43,21 @@ export default class TestCase implements IActions {
     return this;
   }
 
-  withLastStep_pickAndVerify(query: string, expected: any): TestCase {
-    this.recordStep('withLastStep_pickAndVerify', StepType.Verification, {
+  pickAndVerify(query: string, expected: any): TestCase {
+    this.recordStep('pickAndVerify', StepType.Verification, {
       query: query,
       expected: expected,
     });
     return this;
   }
 
-  withLastStep_formatData(templateData: string): TestCase {
-    this.recordStep('withLastStep_formatData', StepType.Action, templateData);
+  formatData(templateData: string): TestCase {
+    this.recordStep('formatData', StepType.Action, templateData);
     return this;
   }
 
-  withLastStep_pickData(query: string): TestCase {
-    this.recordStep('withLastStep_pickData', StepType.Action, query);
+  pickData(query: string): TestCase {
+    this.recordStep('pickData', StepType.Action, query);
     return this;
   }
 
@@ -121,21 +121,21 @@ export default class TestCase implements IActions {
           outputData = await get(inputData);
           break;
 
-        case 'withLastStep_pickData':
+        case 'pickData':
           outputData = await pickJsonData(
             lastStep.outputData,
             currentStep.inputData
           );
           break;
 
-        case 'withLastStep_formatData':
+        case 'formatData':
           outputData = await formatData(
             currentStep.inputData,
             lastStep.outputData
           );
           break;
 
-        case 'withLastStep_pickAndVerify':
+        case 'pickAndVerify':
           outputData = await pickDataAndVerify(
             lastStep.outputData,
             currentStep.inputData.query,
@@ -148,7 +148,7 @@ export default class TestCase implements IActions {
           outputData = this.getStep(currentStep.inputData).outputData;
           break;
 
-        case 'withLastStep_Verify':
+        case 'verify':
           outputData = await verify(lastStep.outputData, currentStep.inputData);
           verified = outputData.verified;
           break;

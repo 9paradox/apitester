@@ -3,10 +3,10 @@ import { GetOptions, Step, TestCaseResult } from './types';
 
 export interface IActions {
   get(options?: GetOptions): TestCase;
-  withLastStep_pickData(query: string): TestCase;
-  withLastStep_formatData(templateData: string): TestCase;
-  withLastStep_pickAndVerify(query: string, expected: any): TestCase;
-  withLastStep_Verify(expected: any): TestCase;
+  pickData(query: string): TestCase;
+  formatData(templateData: string): TestCase;
+  pickAndVerify(query: string, expected: any): TestCase;
+  verify(expected: any): TestCase;
   pickStep(index: number): TestCase;
   getStep(index: number): Step;
   test(): Promise<TestCaseResult>;
