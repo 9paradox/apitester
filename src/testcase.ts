@@ -6,7 +6,14 @@ import {
   verify,
 } from './actions';
 import { IActions } from './apitester';
-import { Step, StepType, TestCaseResult, Optional, ActionName } from './types';
+import {
+  Step,
+  StepType,
+  TestCaseResult,
+  Optional,
+  ActionName,
+  GetOptions,
+} from './types';
 
 export default class TestCase implements IActions {
   steps: Step[];
@@ -49,11 +56,6 @@ export default class TestCase implements IActions {
     return this;
   }
 
-  withLastStep_simpleGet(): TestCase {
-    this.recordStep('withLastStep_simpleGet', StepType.Action, null);
-    return this;
-  }
-
   withLastStep_pickData(query: string): TestCase {
     this.recordStep('withLastStep_pickData', StepType.Action, query);
     return this;
@@ -64,8 +66,8 @@ export default class TestCase implements IActions {
     return this.steps[index];
   }
 
-  simpleGet(url: string): TestCase {
-    this.recordStep('simpleGet', StepType.Action, url);
+  get(options?: GetOptions): TestCase {
+    this.recordStep('get', StepType.Action, options);
     return this;
   }
 
@@ -112,13 +114,11 @@ export default class TestCase implements IActions {
         case 'TEST_CASE':
           break;
 
-        case 'simpleGet':
-          outputData = await get(currentStep.inputData);
-          break;
-
-        case 'withLastStep_simpleGet':
-          inputData = lastStep.outputData;
-          outputData = await get(lastStep.outputData);
+        case 'get':
+          inputData = currentStep.inputData
+            ? currentStep.inputData
+            : lastStep.outputData;
+          outputData = await get(inputData);
           break;
 
         case 'withLastStep_pickData':

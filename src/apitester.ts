@@ -1,9 +1,8 @@
 import TestCase from './testcase';
-import { Step, TestCaseResult } from './types';
+import { GetOptions, Step, TestCaseResult } from './types';
 
 export interface IActions {
-  simpleGet(url: string): TestCase;
-  withLastStep_simpleGet(): TestCase;
+  get(options?: GetOptions): TestCase;
   withLastStep_pickData(query: string): TestCase;
   withLastStep_formatData(templateData: string): TestCase;
   withLastStep_pickAndVerify(query: string, expected: any): TestCase;

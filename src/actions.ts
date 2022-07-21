@@ -1,10 +1,13 @@
 import axios from 'axios';
 import * as Eta from 'eta';
 import * as JemsPath from 'jmespath';
-import { QueryLang, VerificationResult } from './types';
+import { GetOptions, QueryLang, VerificationResult } from './types';
 
-export async function get(url: string): Promise<any> {
-  return await axios.get(url);
+export async function get(options: GetOptions): Promise<any> {
+  const url = typeof options === 'string' ? options : options?.url;
+  const config = typeof options !== 'string' ? options : undefined;
+  if (!url) throw new Error('Invalid url');
+  return await axios.get(url, config);
 }
 
 export function getQueryLang(query: string): {

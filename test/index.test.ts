@@ -8,14 +8,14 @@ describe('apitester', () => {
       );
 
       const testResult = await test
-        .simpleGet('https://jsonplaceholder.typicode.com/todos/')
+        .get('https://jsonplaceholder.typicode.com/todos/')
         .withLastStep_pickAndVerify('status', 200)
         .pickStep(1)
         .withLastStep_pickData('data[0].{id: id}')
         .withLastStep_formatData(
           'https://jsonplaceholder.typicode.com/todos/<%= it.id %>'
         )
-        .withLastStep_simpleGet()
+        .get()
         .withLastStep_pickData('data.title')
         .withLastStep_Verify('delectus aut autem')
         .test();

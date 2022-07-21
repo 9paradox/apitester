@@ -1,3 +1,4 @@
+import { AxiosRequestConfig } from 'axios';
 import { IActions } from './apitester';
 
 export type ActionName = keyof IActions | 'TEST_CASE';
@@ -39,3 +40,5 @@ export interface VerificationResult {
   verified: boolean;
   actualData: any;
 }
+
+export type GetOptions = string | AxiosRequestConfig | undefined;
