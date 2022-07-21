@@ -42,3 +42,9 @@ export interface VerificationResult {
 }
 
 export type GetOptions = string | AxiosRequestConfig | undefined;
+
+export interface SimplePostConfig {
+  url: string;
+  data: any;
+}
+export type PostOptions = SimplePostConfig | AxiosRequestConfig | undefined;

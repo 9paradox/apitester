@@ -1,8 +1,9 @@
 import TestCase from './testcase';
-import { GetOptions, Step, TestCaseResult } from './types';
+import { GetOptions, PostOptions, Step, TestCaseResult } from './types';
 
 export interface IActions {
   get(options?: GetOptions): TestCase;
+  post(options?: PostOptions): TestCase;
   pickData(query: string): TestCase;
   formatData(templateData: string): TestCase;
   pickAndVerify(query: string, expected: any): TestCase;

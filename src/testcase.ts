@@ -4,6 +4,7 @@ import {
   formatData,
   pickDataAndVerify,
   verify,
+  post,
 } from './actions';
 import { IActions } from './apitester';
 import {
@@ -13,6 +14,7 @@ import {
   Optional,
   ActionName,
   GetOptions,
+  PostOptions,
 } from './types';
 
 export default class TestCase implements IActions {
@@ -71,6 +73,11 @@ export default class TestCase implements IActions {
     return this;
   }
 
+  post(options?: PostOptions): TestCase {
+    this.recordStep('post', StepType.Action, options);
+    return this;
+  }
+
   async test(): Promise<TestCaseResult> {
     return await this._test();
   }
@@ -119,6 +126,13 @@ export default class TestCase implements IActions {
             ? currentStep.inputData
             : lastStep.outputData;
           outputData = await get(inputData);
+          break;
+
+        case 'post':
+          inputData = currentStep.inputData
+            ? currentStep.inputData
+            : lastStep.outputData;
+          outputData = await post(inputData);
           break;
 
         case 'pickData':

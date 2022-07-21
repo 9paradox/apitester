@@ -16,6 +16,13 @@ describe('apitester', () => {
         .get()
         .pickData('data.title')
         .verify('delectus aut autem')
+        .pickStep(6)
+        .pickData(
+          'data.{url:`https://jsonplaceholder.typicode.com/posts`,data:{title:title,body:`lol`,userId:to_number(`1`)}}'
+        )
+        .post()
+        .pickData('data.title')
+        .verify('delectus aut autem')
         .test();
 
       expect(testResult.success).toEqual(true);

@@ -1,13 +1,41 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import * as Eta from 'eta';
 import * as JemsPath from 'jmespath';
-import { GetOptions, QueryLang, VerificationResult } from './types';
+import {
+  GetOptions,
+  PostOptions,
+  QueryLang,
+  VerificationResult,
+} from './types';
 
 export async function get(options: GetOptions): Promise<any> {
   const url = typeof options === 'string' ? options : options?.url;
-  const config = typeof options !== 'string' ? options : undefined;
+
+  const config =
+    typeof options !== 'string' ? (options as AxiosRequestConfig) : undefined;
+
   if (!url) throw new Error('Invalid url');
+
+  if (config) config.method = 'GET';
+
   return await axios.get(url, config);
+}
+
+export async function post(options: PostOptions): Promise<any> {
+  var url = options?.url;
+  var data = options?.data;
+  const config =
+    typeof options !== 'string' ? (options as AxiosRequestConfig) : undefined;
+
+  if (!url) url = config?.url;
+  if (!data) data = config?.data;
+
+  if (!url) throw new Error('Invalid url');
+  if (!url) throw new Error('Invalid data');
+
+  if (config) config.method = 'POST';
+
+  return await axios.post(url, data, config);
 }
 
 export function getQueryLang(query: string): {
