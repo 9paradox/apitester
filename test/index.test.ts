@@ -3,9 +3,7 @@ import apitester from '../src/index';
 describe('apitester', () => {
   it('should perform overall test actions and verifications', async () => {
     try {
-      const test = apitester.setup(
-        'should perform overall test actions and verifications'
-      );
+      const test = apitester.createTestCase();
 
       const testResult = await test
         .get('https://jsonplaceholder.typicode.com/todos/')
@@ -26,7 +24,6 @@ describe('apitester', () => {
         .test();
 
       expect(testResult.success).toEqual(true);
-      console.log(testResult.steps);
     } catch (error) {
       console.log(error);
       expect(false).toEqual(true);

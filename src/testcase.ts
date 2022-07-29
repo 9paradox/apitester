@@ -15,19 +15,20 @@ import {
   ActionName,
   GetOptions,
   PostOptions,
+  TestCaseOptions,
 } from './types';
 
 export default class TestCase implements IActions {
   steps: Step[];
   stepIndex: number;
 
-  constructor(title: string) {
+  constructor(options?: TestCaseOptions) {
     this.steps = [
       {
         action: 'TEST_CASE',
         type: StepType.Action,
         index: 0,
-        inputData: title,
+        inputData: options?.title,
         outputData: {},
         verified: undefined,
       },

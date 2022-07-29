@@ -47,4 +47,10 @@ export interface SimplePostConfig {
   url: string;
   data: any;
 }
+
 export type PostOptions = SimplePostConfig | AxiosRequestConfig | undefined;
+
+export interface TestCaseOptions {
+  title?: string;
+  dataFilePath?: string;
+}

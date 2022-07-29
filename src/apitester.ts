@@ -1,5 +1,11 @@
 import TestCase from './testcase';
-import { GetOptions, PostOptions, Step, TestCaseResult } from './types';
+import {
+  GetOptions,
+  PostOptions,
+  Step,
+  TestCaseOptions,
+  TestCaseResult,
+} from './types';
 
 export interface IActions {
   get(options?: GetOptions): TestCase;
@@ -14,11 +20,11 @@ export interface IActions {
 }
 
 interface ApiTester {
-  setup: (title: string) => IActions;
+  createTestCase: (options?: TestCaseOptions) => IActions;
 }
 
 export const apitester: ApiTester = {
-  setup: (title: string) => {
-    return new TestCase(title);
+  createTestCase: (options?: TestCaseOptions) => {
+    return new TestCase(options);
   },
 };
