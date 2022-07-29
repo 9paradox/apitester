@@ -1,13 +1,13 @@
 name: size
 on: [pull_request]
-if: github.ref == 'refs/heads/main'
 jobs:
-  size:
-    runs-on: ubuntu-latest
-    env:
-      CI_JOB_NUMBER: 1
-    steps:
-      - uses: actions/checkout@v3
-      - uses: andresz1/size-limit-action@v1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+  if: github.ref == 'refs/heads/main'
+    size:
+      runs-on: ubuntu-latest
+      env:
+        CI_JOB_NUMBER: 1
+      steps:
+        - uses: actions/checkout@v3
+        - uses: andresz1/size-limit-action@v1
+          with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
