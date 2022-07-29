@@ -1,5 +1,6 @@
 name: size
 on: [pull_request]
+if: github.ref == 'refs/heads/main'
 jobs:
   size:
     runs-on: ubuntu-latest
