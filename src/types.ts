@@ -54,3 +54,8 @@ export interface TestCaseOptions {
   title?: string;
   dataFilePath?: string;
 }
+
+export interface PickAndVerifyOptions {
+  query: string;
+  expected: any;
+}

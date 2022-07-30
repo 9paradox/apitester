@@ -16,6 +16,7 @@ import {
   GetOptions,
   PostOptions,
   TestCaseOptions,
+  PickAndVerifyOptions,
 } from './types';
 
 export default class TestCase implements IActions {
@@ -46,10 +47,10 @@ export default class TestCase implements IActions {
     return this;
   }
 
-  pickAndVerify(query: string, expected: any): TestCase {
+  pickAndVerify(options: PickAndVerifyOptions): TestCase {
     this.recordStep('pickAndVerify', StepType.Verification, {
-      query: query,
-      expected: expected,
+      query: options.query,
+      expected: options.expected,
     });
     return this;
   }
