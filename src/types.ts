@@ -59,3 +59,7 @@ export interface PickAndVerifyOptions {
   query: string;
   expected: any;
 }
+
+export interface DataSource {
+  [key: string]: any;
+}

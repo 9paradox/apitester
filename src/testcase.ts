@@ -1,4 +1,5 @@
 import { IActions } from './apitester';
+import Helper from './helpers';
 import performAction from './perform-actions';
 import {
   Step,
@@ -10,11 +11,13 @@ import {
   PostOptions,
   TestCaseOptions,
   PickAndVerifyOptions,
+  DataSource,
 } from './types';
 
 export default class TestCase implements IActions {
   steps: Step[];
   stepIndex: number;
+  dataSource: DataSource;
 
   constructor(options?: TestCaseOptions) {
     this.steps = [
@@ -28,6 +31,23 @@ export default class TestCase implements IActions {
       },
     ];
     this.stepIndex = 0;
+
+    this.dataSource = {};
+
+    if (options?.dataFilePath && !Helper.fileExists(options.dataFilePath)) {
+      throw new Error('Data file not found.');
+    }
+
+    if (options?.dataFilePath && Helper.fileExists(options.dataFilePath)) {
+      this.dataSource = JSON.parse(Helper.readFile(options.dataFilePath));
+    }
+  }
+
+  data(key: string): any {
+    if (!this.dataSource.hasOwnProperty(key))
+      throw new Error('Key not found in the data source.');
+
+    return this.dataSource[key];
   }
 
   verify(expected: any): TestCase {

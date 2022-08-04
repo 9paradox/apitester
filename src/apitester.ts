@@ -17,6 +17,7 @@ export interface IActions {
   verify(expected: any): TestCase;
   pickStep(index: number): TestCase;
   getStep(index: number): Step;
+  data(key: string): any;
   test(): Promise<TestCaseResult>;
 }
 

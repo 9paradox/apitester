@@ -3,7 +3,9 @@ import apitester from '../src/index';
 describe('apitester', () => {
   it('should perform overall test actions and verifications', async () => {
     try {
-      const test = apitester.createTestCase();
+      const test = apitester.createTestCase({
+        dataFilePath: './test/test-data.json',
+      });
 
       const testResult = await test
         .get('https://jsonplaceholder.typicode.com/todos/')
@@ -20,7 +22,7 @@ describe('apitester', () => {
         )
         .post()
         .pickData('data.title')
-        .verify('delectus aut autem')
+        .verify(test.data('delectus_aut_autem'))
         .test();
 
       expect(testResult.success).toEqual(true);
