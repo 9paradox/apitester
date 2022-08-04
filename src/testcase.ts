@@ -1,12 +1,5 @@
-import {
-  get,
-  pickJsonData,
-  formatData,
-  pickDataAndVerify,
-  verify,
-  post,
-} from './actions';
 import { IActions } from './apitester';
+import performAction from './perform-actions';
 import {
   Step,
   StepType,
@@ -81,17 +74,17 @@ export default class TestCase implements IActions {
   }
 
   async test(): Promise<TestCaseResult> {
-    return await this._test();
+    return await this.testCaseRunner();
   }
 
-  async _test(): Promise<TestCaseResult> {
+  async testCaseRunner(): Promise<TestCaseResult> {
     const totalSteps = this.steps.length;
 
     const totalVerificationSteps = this.steps.filter(
       (s) => s.type == StepType.Verification
     ).length;
 
-    var testCaseStatus: TestCaseResult = {
+    var testCaseResults: TestCaseResult = {
       success: false,
       totalSteps: totalSteps,
       executedSteps: 0,
@@ -104,94 +97,45 @@ export default class TestCase implements IActions {
     };
 
     for (let index = 1; index < totalSteps; index++) {
-      const currentStep = this.getStep(index);
-      const lastStep = this.getStep(index - 1);
-
-      var inputData: any = null;
-      var outputData: any;
-      var verified: Optional<boolean> = undefined;
-
-      testCaseStatus.executedSteps++;
-      testCaseStatus.lastExecutedStep = index;
-
-      if (currentStep.type == StepType.Verification) {
-        testCaseStatus.executedVerificationSteps++;
-        testCaseStatus.lastVerificationStep = index;
-      }
-
-      switch (currentStep.action) {
-        case 'TEST_CASE':
-          break;
-
-        case 'get':
-          inputData = currentStep.inputData
-            ? currentStep.inputData
-            : lastStep.outputData;
-          outputData = await get(inputData);
-          break;
-
-        case 'post':
-          inputData = currentStep.inputData
-            ? currentStep.inputData
-            : lastStep.outputData;
-          outputData = await post(inputData);
-          break;
-
-        case 'pickData':
-          outputData = await pickJsonData(
-            lastStep.outputData,
-            currentStep.inputData
-          );
-          break;
-
-        case 'formatData':
-          outputData = await formatData(
-            currentStep.inputData,
-            lastStep.outputData
-          );
-          break;
-
-        case 'pickAndVerify':
-          outputData = await pickDataAndVerify(
-            lastStep.outputData,
-            currentStep.inputData.query,
-            currentStep.inputData.expected
-          );
-          verified = outputData.verified;
-          break;
-
-        case 'pickStep':
-          outputData = this.getStep(currentStep.inputData).outputData;
-          break;
-
-        case 'verify':
-          outputData = await verify(lastStep.outputData, currentStep.inputData);
-          verified = outputData.verified;
-          break;
-
-        default:
-          throw new Error(`'${currentStep.action}' method is not implemented.`);
-      }
-
-      this.setOutputData(currentStep.index, outputData);
-
-      if (verified !== undefined)
-        this.setStepVerifiedStatus(currentStep.index, verified);
-
-      if (inputData) this.setInputData(currentStep.index, inputData);
+      await this.performStep(index, testCaseResults);
     }
 
-    testCaseStatus.steps = [...this.steps];
+    testCaseResults.steps = [...this.steps];
 
-    testCaseStatus.totalSuccessfulVerificationSteps = this.steps.filter(
+    testCaseResults.totalSuccessfulVerificationSteps = this.steps.filter(
       (s) => s.type == StepType.Verification && s.verified == true
     ).length;
 
-    testCaseStatus.success =
-      testCaseStatus.totalSuccessfulVerificationSteps ==
-      testCaseStatus.totalVerificationSteps;
+    testCaseResults.success =
+      testCaseResults.totalSuccessfulVerificationSteps ==
+      testCaseResults.totalVerificationSteps;
 
-    return testCaseStatus;
+    return testCaseResults;
+  }
+
+  private async performStep(index: number, testCaseStatus: TestCaseResult) {
+    const currentStep = this.getStep(index);
+    const lastStep = this.getStep(index - 1);
+
+    testCaseStatus.executedSteps++;
+    testCaseStatus.lastExecutedStep = index;
+
+    if (currentStep.type == StepType.Verification) {
+      testCaseStatus.executedVerificationSteps++;
+      testCaseStatus.lastVerificationStep = index;
+    }
+
+    const { inputData, outputData, verified } = await performAction(
+      this,
+      currentStep,
+      lastStep
+    );
+
+    this.setOutputData(index, outputData);
+
+    if (verified !== undefined) this.setStepVerifiedStatus(index, verified);
+
+    if (inputData) this.setInputData(index, inputData);
   }
 
   recordStep(
