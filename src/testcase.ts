@@ -12,6 +12,7 @@ import {
   TestCaseOptions,
   PickAndVerifyOptions,
   DataSource,
+  FormatTemplateOptions,
 } from './types';
 
 export default class TestCase implements IActions {
@@ -41,6 +42,11 @@ export default class TestCase implements IActions {
     if (options?.dataFilePath && Helper.fileExists(options.dataFilePath)) {
       this.dataSource = JSON.parse(Helper.readFile(options.dataFilePath));
     }
+  }
+
+  formatTemplate(options: FormatTemplateOptions): TestCase {
+    this.recordStep('formatTemplate', StepType.Action, options);
+    return this;
   }
 
   data(key: string): any {

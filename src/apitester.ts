@@ -1,5 +1,6 @@
 import TestCase from './testcase';
 import {
+  FormatTemplateOptions,
   GetOptions,
   PickAndVerifyOptions,
   PostOptions,
@@ -13,6 +14,7 @@ export interface IActions {
   post(options?: PostOptions): TestCase;
   pickData(query: string): TestCase;
   formatData(templateData: string): TestCase;
+  formatTemplate(options: FormatTemplateOptions): TestCase;
   pickAndVerify(options: PickAndVerifyOptions): TestCase;
   verify(expected: any): TestCase;
   pickStep(index: number): TestCase;

@@ -17,9 +17,11 @@ describe('apitester', () => {
         .pickData('data.title')
         .verify('delectus aut autem')
         .pickStep(6)
-        .pickData(
-          'data.{url:`https://jsonplaceholder.typicode.com/posts`,data:{title:title,body:`lol`,userId:to_number(`1`)}}'
-        )
+        .pickData('data.{data:{title:title,body:`lol`,userId:to_number(`1`)}}')
+        .formatTemplate({
+          filePath: './test/test-template.txt',
+          outputDataFormat: 'object',
+        })
         .post()
         .pickData('data.title')
         .verify(test.data('delectus_aut_autem'))

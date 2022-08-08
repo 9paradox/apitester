@@ -63,3 +63,11 @@ export interface PickAndVerifyOptions {
 export interface DataSource {
   [key: string]: any;
 }
+
+export type FormatTemplateOptions =
+  | string
+  | {
+      filePath: string;
+      outputDataFormat: 'string' | 'number' | 'boolean' | 'object';
+    }
+  | undefined;

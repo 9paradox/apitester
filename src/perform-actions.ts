@@ -5,6 +5,7 @@ import {
   formatData,
   pickDataAndVerify,
   verify,
+  formatTemplate,
 } from './actions';
 import TestCase from './testcase';
 import { Step, Optional } from './types';
@@ -64,6 +65,13 @@ export default async function performAction(
     case 'verify':
       outputData = await verify(lastStep.outputData, currentStep.inputData);
       verified = outputData.verified;
+      break;
+
+    case 'formatTemplate':
+      outputData = await formatTemplate(
+        currentStep.inputData,
+        lastStep.outputData
+      );
       break;
 
     default:
