@@ -13,6 +13,7 @@ import {
   PickAndVerifyOptions,
   DataSource,
   FormatTemplateOptions,
+  VerifyOptions,
 } from './types';
 
 export default class TestCase implements IActions {
@@ -56,8 +57,8 @@ export default class TestCase implements IActions {
     return this.dataSource[key];
   }
 
-  verify(expected: any): TestCase {
-    this.recordStep('verify', StepType.Verification, expected);
+  verify(option: VerifyOptions): TestCase {
+    this.recordStep('verify', StepType.Verification, option);
     return this;
   }
 
@@ -67,10 +68,7 @@ export default class TestCase implements IActions {
   }
 
   pickAndVerify(options: PickAndVerifyOptions): TestCase {
-    this.recordStep('pickAndVerify', StepType.Verification, {
-      query: options.query,
-      expected: options.expected,
-    });
+    this.recordStep('pickAndVerify', StepType.Verification, options);
     return this;
   }
 

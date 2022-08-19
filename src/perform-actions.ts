@@ -52,8 +52,7 @@ export default async function performAction(
     case 'pickAndVerify':
       outputData = await pickDataAndVerify(
         lastStep.outputData,
-        currentStep.inputData.query,
-        currentStep.inputData.expected
+        currentStep.inputData
       );
       verified = outputData.verified;
       break;

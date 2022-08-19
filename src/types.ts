@@ -55,10 +55,35 @@ export interface TestCaseOptions {
   dataFilePath?: string;
 }
 
+export type ToBe =
+  | 'equal'
+  | '=='
+  | 'notEqual'
+  | '!='
+  | 'greaterThan'
+  | '>'
+  | 'greaterThanOrEqual'
+  | '>='
+  | 'lessThan'
+  | '<'
+  | 'lessThanOrEqual'
+  | '<='
+  | 'in'
+  | 'notIn'
+  | 'contains';
+
 export interface PickAndVerifyOptions {
   query: string;
   expected: any;
+  toBe?: ToBe;
 }
+
+export type VerifyOptions =
+  | string
+  | {
+      expected: any;
+      toBe?: ToBe;
+    };
 
 export interface DataSource {
   [key: string]: any;

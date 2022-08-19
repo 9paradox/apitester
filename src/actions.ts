@@ -5,9 +5,12 @@ import Helper from './helpers';
 import {
   FormatTemplateOptions,
   GetOptions,
+  PickAndVerifyOptions,
   PostOptions,
   QueryLang,
+  ToBe,
   VerificationResult,
+  VerifyOptions,
 } from './types';
 
 export async function get(options: GetOptions): Promise<any> {
@@ -111,20 +114,96 @@ export async function formatTemplate(
   }
 }
 
+export function compare(actual: any, toBe: ToBe, expected: any): boolean {
+  var check = false;
+  switch (toBe) {
+    case '==':
+    case 'equal':
+      check = JSON.stringify(actual) === JSON.stringify(expected);
+      break;
+
+    case '!=':
+    case 'notEqual':
+      check = JSON.stringify(actual) !== JSON.stringify(expected);
+      break;
+
+    case '>':
+    case 'greaterThan':
+      if (Number.isNaN(actual) || Number.isNaN(expected)) {
+        throw new Error('The actual or expected data is not number.');
+      }
+      check = JSON.stringify(actual) > JSON.stringify(expected);
+      break;
+
+    case '>=':
+    case 'greaterThanOrEqual':
+      if (Number.isNaN(actual) || Number.isNaN(expected)) {
+        throw new Error('The actual or expected data is not number.');
+      }
+      check = JSON.stringify(actual) >= JSON.stringify(expected);
+      break;
+
+    case '<':
+    case 'lessThan':
+      if (Number.isNaN(actual) || Number.isNaN(expected)) {
+        throw new Error('The actual or expected data is not number.');
+      }
+      check = JSON.stringify(actual) < JSON.stringify(expected);
+      break;
+
+    case '<=':
+    case 'lessThanOrEqual':
+      if (Number.isNaN(actual) || Number.isNaN(expected)) {
+        throw new Error('The actual or expected data is not number.');
+      }
+      check = JSON.stringify(actual) <= JSON.stringify(expected);
+      break;
+
+    case 'in':
+      if (!Array.isArray(expected)) {
+        throw new Error('The expected data is not of array type.');
+      }
+      check = [...expected].includes(actual);
+      break;
+
+    case 'notIn':
+      if (!Array.isArray(expected)) {
+        throw new Error('The expected data is not of array type.');
+      }
+      check = ![...expected].includes(actual);
+      break;
+
+    case 'contains':
+      if (Array.isArray(actual)) {
+        check = [...actual].includes(expected);
+      } else {
+        check = JSON.stringify(actual).includes(expected);
+      }
+      break;
+
+    default:
+      throw new Error(`'${toBe}' comparison is not implemented.`);
+  }
+  return check;
+}
+
 export async function pickDataAndVerify(
   inputData: any,
-  query: string,
-  expectedData: any
+  options: PickAndVerifyOptions
 ): Promise<VerificationResult> {
-  const actualData = await pickJsonData(inputData, query);
-  const areEqual = JSON.stringify(actualData) === JSON.stringify(expectedData);
+  const toBe = options.toBe ?? '==';
+  const actualData = await pickJsonData(inputData, options.query);
+  const areEqual = compare(actualData, toBe, options.expected);
   return { verified: areEqual, actualData };
 }
 
 export async function verify(
   actualData: any,
-  expectedData: any
+  options: VerifyOptions
 ): Promise<VerificationResult> {
+  const toBe = typeof options != 'string' ? options.toBe ?? '==' : '==';
+  const expectedData = typeof options != 'string' ? options.expected : options;
+
   const areEqual = JSON.stringify(actualData) === JSON.stringify(expectedData);
   return { verified: areEqual, actualData };
 }

@@ -7,6 +7,7 @@ import {
   Step,
   TestCaseOptions,
   TestCaseResult,
+  VerifyOptions,
 } from './types';
 
 export interface IActions {
@@ -16,7 +17,7 @@ export interface IActions {
   formatData(templateData: string): TestCase;
   formatTemplate(options: FormatTemplateOptions): TestCase;
   pickAndVerify(options: PickAndVerifyOptions): TestCase;
-  verify(expected: any): TestCase;
+  verify(option: VerifyOptions): TestCase;
   pickStep(index: number): TestCase;
   getStep(index: number): Step;
   data(key: string): any;
