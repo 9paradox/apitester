@@ -16,12 +16,24 @@ import {
 export async function get(options: GetOptions): Promise<any> {
   const url = typeof options === 'string' ? options : options?.url;
 
-  const config =
+  var config =
     typeof options !== 'string' ? (options as AxiosRequestConfig) : undefined;
 
   if (!url) throw new Error('Invalid url');
 
-  if (config) config.method = 'GET';
+  if (config) {
+    config.method = 'GET';
+    config.validateStatus = (statusNumber) => {
+      return true;
+    }; //don't throw error
+  } else {
+    config = {
+      method: 'GET',
+      validateStatus: (statusNumber: number) => {
+        return true;
+      },
+    } as AxiosRequestConfig;
+  }
 
   return await axios.get(url, config);
 }
@@ -29,7 +41,7 @@ export async function get(options: GetOptions): Promise<any> {
 export async function post(options: PostOptions): Promise<any> {
   var url = options?.url;
   var data = options?.data;
-  const config =
+  var config =
     typeof options !== 'string' ? (options as AxiosRequestConfig) : undefined;
 
   if (!url) url = config?.url;
@@ -38,7 +50,19 @@ export async function post(options: PostOptions): Promise<any> {
   if (!url) throw new Error('Invalid url');
   if (!url) throw new Error('Invalid data');
 
-  if (config) config.method = 'POST';
+  if (config) {
+    config.method = 'POST';
+    config.validateStatus = (statusNumber) => {
+      return true;
+    }; //don't throw error
+  } else {
+    config = {
+      method: 'POST',
+      validateStatus: (statusNumber: number) => {
+        return true;
+      },
+    } as AxiosRequestConfig;
+  }
 
   return await axios.post(url, data, config);
 }
@@ -114,17 +138,28 @@ export async function formatTemplate(
   }
 }
 
-export function compare(actual: any, toBe: ToBe, expected: any): boolean {
+export function compare(
+  actual: any,
+  toBe: ToBe,
+  expected: any
+): { check: boolean; message?: string } {
   var check = false;
+  var message: string | undefined;
   switch (toBe) {
     case '==':
     case 'equal':
       check = JSON.stringify(actual) === JSON.stringify(expected);
+      if (!check) {
+        message = 'actual is not equal to expected.';
+      }
       break;
 
     case '!=':
     case 'notEqual':
       check = JSON.stringify(actual) !== JSON.stringify(expected);
+      if (!check) {
+        message = 'actual and expected should be not equal.';
+      }
       break;
 
     case '>':
@@ -133,6 +168,9 @@ export function compare(actual: any, toBe: ToBe, expected: any): boolean {
         throw new Error('The actual or expected data is not number.');
       }
       check = JSON.stringify(actual) > JSON.stringify(expected);
+      if (!check) {
+        message = 'actual is not greater than expected.';
+      }
       break;
 
     case '>=':
@@ -141,6 +179,9 @@ export function compare(actual: any, toBe: ToBe, expected: any): boolean {
         throw new Error('The actual or expected data is not number.');
       }
       check = JSON.stringify(actual) >= JSON.stringify(expected);
+      if (!check) {
+        message = 'actual is not greater than or equal to expected.';
+      }
       break;
 
     case '<':
@@ -149,6 +190,9 @@ export function compare(actual: any, toBe: ToBe, expected: any): boolean {
         throw new Error('The actual or expected data is not number.');
       }
       check = JSON.stringify(actual) < JSON.stringify(expected);
+      if (!check) {
+        message = 'actual is not less than expected.';
+      }
       break;
 
     case '<=':
@@ -157,6 +201,9 @@ export function compare(actual: any, toBe: ToBe, expected: any): boolean {
         throw new Error('The actual or expected data is not number.');
       }
       check = JSON.stringify(actual) <= JSON.stringify(expected);
+      if (!check) {
+        message = 'actual is not less than or equal to expected.';
+      }
       break;
 
     case 'in':
@@ -164,6 +211,9 @@ export function compare(actual: any, toBe: ToBe, expected: any): boolean {
         throw new Error('The expected data is not of array type.');
       }
       check = [...expected].includes(actual);
+      if (!check) {
+        message = 'actual is not found expected.';
+      }
       break;
 
     case 'notIn':
@@ -171,6 +221,9 @@ export function compare(actual: any, toBe: ToBe, expected: any): boolean {
         throw new Error('The expected data is not of array type.');
       }
       check = ![...expected].includes(actual);
+      if (!check) {
+        message = 'actual should not be found expected.';
+      }
       break;
 
     case 'contains':
@@ -179,12 +232,15 @@ export function compare(actual: any, toBe: ToBe, expected: any): boolean {
       } else {
         check = JSON.stringify(actual).includes(expected);
       }
+      if (!check) {
+        message = 'actual does not contain expected.';
+      }
       break;
 
     default:
       throw new Error(`'${toBe}' comparison is not implemented.`);
   }
-  return check;
+  return { check, message };
 }
 
 export async function pickDataAndVerify(
@@ -193,8 +249,12 @@ export async function pickDataAndVerify(
 ): Promise<VerificationResult> {
   const toBe = options.toBe ?? '==';
   const actualData = await pickJsonData(inputData, options.query);
-  const areEqual = compare(actualData, toBe, options.expected);
-  return { verified: areEqual, actualData };
+  const comparison = compare(actualData, toBe, options.expected);
+  return {
+    verified: comparison.check,
+    actualData,
+    message: comparison.message,
+  };
 }
 
 export async function verify(
@@ -204,6 +264,10 @@ export async function verify(
   const toBe = typeof options != 'string' ? options.toBe ?? '==' : '==';
   const expectedData = typeof options != 'string' ? options.expected : options;
 
-  const areEqual = JSON.stringify(actualData) === JSON.stringify(expectedData);
-  return { verified: areEqual, actualData };
+  const comparison = compare(actualData, toBe, expectedData);
+  return {
+    verified: comparison.check,
+    actualData,
+    message: comparison.message,
+  };
 }

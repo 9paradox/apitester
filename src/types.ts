@@ -29,6 +29,7 @@ export interface TestCaseResult {
   totalSuccessfulVerificationSteps: number;
   lastVerificationStep: number;
   steps: Step[];
+  error?: { title: string; message?: string; type: 'error' | 'exception' };
 }
 
 export enum QueryLang {
@@ -39,6 +40,7 @@ export enum QueryLang {
 export interface VerificationResult {
   verified: boolean;
   actualData: any;
+  message?: string;
 }
 
 export type GetOptions = string | AxiosRequestConfig | undefined;
@@ -96,3 +98,8 @@ export type FormatTemplateOptions =
       outputDataFormat: 'string' | 'number' | 'boolean' | 'object';
     }
   | undefined;
+
+export interface StepResult {
+  success: boolean;
+  message?: string;
+}

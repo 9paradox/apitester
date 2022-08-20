@@ -8,7 +8,7 @@ import {
   formatTemplate,
 } from './actions';
 import TestCase from './testcase';
-import { Step, Optional } from './types';
+import { Step, Optional, VerificationResult } from './types';
 
 export default async function performAction(
   testCase: TestCase,
@@ -17,7 +17,7 @@ export default async function performAction(
 ) {
   var inputData: any = null;
   var outputData: any;
-  var verified: Optional<boolean> = undefined;
+  var verification: Optional<VerificationResult> = undefined;
 
   //TODO: refactor into key based function calls
   switch (currentStep.action) {
@@ -54,7 +54,7 @@ export default async function performAction(
         lastStep.outputData,
         currentStep.inputData
       );
-      verified = outputData.verified;
+      verification = outputData;
       break;
 
     case 'pickStep':
@@ -63,7 +63,7 @@ export default async function performAction(
 
     case 'verify':
       outputData = await verify(lastStep.outputData, currentStep.inputData);
-      verified = outputData.verified;
+      verification = outputData;
       break;
 
     case 'formatTemplate':
@@ -76,5 +76,5 @@ export default async function performAction(
     default:
       throw new Error(`'${currentStep.action}' method is not implemented.`);
   }
-  return { inputData, outputData, verified };
+  return { inputData, outputData, verification };
 }

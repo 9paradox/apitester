@@ -14,6 +14,7 @@ import {
   DataSource,
   FormatTemplateOptions,
   VerifyOptions,
+  StepResult,
 } from './types';
 
 export default class TestCase implements IActions {
@@ -120,8 +121,27 @@ export default class TestCase implements IActions {
       steps: [...this.steps],
     };
 
+    var shouldContinue = false;
     for (let index = 1; index < totalSteps; index++) {
-      await this.performStep(index, testCaseResults);
+      try {
+        const stepResult = await this.performStep(index, testCaseResults);
+        shouldContinue = stepResult.success;
+        if (!shouldContinue) {
+          testCaseResults.error = {
+            type: 'error',
+            title: 'Error occurred on step: ' + index,
+            message: stepResult.message,
+          };
+        }
+      } catch (ex) {
+        shouldContinue = false;
+        testCaseResults.error = {
+          type: 'exception',
+          title: 'Exception occurred on step: ' + index,
+          message: JSON.stringify(ex),
+        };
+      }
+      if (shouldContinue == false) break;
     }
 
     testCaseResults.steps = [...this.steps];
@@ -137,7 +157,10 @@ export default class TestCase implements IActions {
     return testCaseResults;
   }
 
-  private async performStep(index: number, testCaseStatus: TestCaseResult) {
+  private async performStep(
+    index: number,
+    testCaseStatus: TestCaseResult
+  ): Promise<StepResult> {
     const currentStep = this.getStep(index);
     const lastStep = this.getStep(index - 1);
 
@@ -149,7 +172,7 @@ export default class TestCase implements IActions {
       testCaseStatus.lastVerificationStep = index;
     }
 
-    const { inputData, outputData, verified } = await performAction(
+    const { inputData, outputData, verification } = await performAction(
       this,
       currentStep,
       lastStep
@@ -157,9 +180,23 @@ export default class TestCase implements IActions {
 
     this.setOutputData(index, outputData);
 
-    if (verified !== undefined) this.setStepVerifiedStatus(index, verified);
+    if (verification !== undefined)
+      this.setStepVerifiedStatus(index, verification.verified);
 
     if (inputData) this.setInputData(index, inputData);
+
+    var stepResult: StepResult = {
+      success: true,
+    };
+
+    if (currentStep.type == StepType.Verification) {
+      stepResult.success = verification?.verified ?? false;
+      if (verification?.message) {
+        stepResult.message = verification.message;
+      }
+    }
+
+    return stepResult;
   }
 
   recordStep(
