@@ -55,6 +55,7 @@ export type PostOptions = SimplePostConfig | AxiosRequestConfig | undefined;
 export interface TestCaseOptions {
   title?: string;
   dataFilePath?: string;
+  steps?: StepOptions[];
 }
 
 export type ToBe =

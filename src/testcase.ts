@@ -45,6 +45,17 @@ export default class TestCase implements IActions {
     if (options?.dataFilePath && Helper.fileExists(options.dataFilePath)) {
       this.dataSource = JSON.parse(Helper.readFile(options.dataFilePath));
     }
+
+    if (options?.steps && options.steps.length > 0) {
+      this.addSteps(options?.steps);
+    }
+  }
+
+  addSteps(steps: StepOptions[]): TestCase {
+    steps.forEach((step) => {
+      this.addStep(step);
+    });
+    return this;
   }
 
   formatTemplate(options: FormatTemplateOptions): TestCase {
