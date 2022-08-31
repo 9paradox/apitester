@@ -15,7 +15,7 @@ describe('apitester', () => {
       .get()
       .pickData('data.title')
       .verify('delectus aut autem')
-      .pickStep(6)
+      .addStep({ action: 'pickStep', inputData: 6 })
       .pickData('data.{data:{title:title,body:`lol`,userId:to_number(`1`)}}')
       .formatTemplate({
         filePath: './test/test-template.txt',

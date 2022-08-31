@@ -103,3 +103,8 @@ export interface StepResult {
   success: boolean;
   message?: string;
 }
+
+export interface StepOptions {
+  action: ActionName;
+  inputData: any;
+}

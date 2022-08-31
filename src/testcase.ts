@@ -1,4 +1,4 @@
-import { IActions } from './apitester';
+import { getStepType, IActions } from './apitester';
 import Helper from './helpers';
 import performAction from './perform-actions';
 import {
@@ -15,6 +15,7 @@ import {
   FormatTemplateOptions,
   VerifyOptions,
   StepResult,
+  StepOptions,
 } from './types';
 
 export default class TestCase implements IActions {
@@ -86,6 +87,12 @@ export default class TestCase implements IActions {
   getStep(index: number): Step {
     this.validateIndexOrThrow(index);
     return this.steps[index];
+  }
+
+  addStep(options: StepOptions): TestCase {
+    const stepType = getStepType(options.action);
+    this.recordStep(options.action, stepType, options.inputData);
+    return this;
   }
 
   get(options?: GetOptions): TestCase {

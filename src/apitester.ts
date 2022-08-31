@@ -1,10 +1,13 @@
 import TestCase from './testcase';
 import {
+  ActionName,
   FormatTemplateOptions,
   GetOptions,
   PickAndVerifyOptions,
   PostOptions,
   Step,
+  StepOptions,
+  StepType,
   TestCaseOptions,
   TestCaseResult,
   VerifyOptions,
@@ -19,9 +22,18 @@ export interface IActions {
   pickAndVerify(options: PickAndVerifyOptions): TestCase;
   verify(option: VerifyOptions): TestCase;
   pickStep(index: number): TestCase;
+  addStep(options: StepOptions): TestCase;
   getStep(index: number): Step;
   data(key: string): any;
   test(): Promise<TestCaseResult>;
+}
+
+export function getStepType(actionName: ActionName): StepType {
+  const keys = ['verify'];
+  const name = actionName.toLocaleLowerCase();
+  return keys.find((k) => name.includes(k))?.length ?? 0 > 0
+    ? StepType.Verification
+    : StepType.Action;
 }
 
 interface ApiTester {
