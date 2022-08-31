@@ -7,7 +7,7 @@ describe('apitester', () => {
     });
 
     const testResult = await test
-      .get('https://jsonplaceholder.typicode.com/todosf/')
+      .get('https://jsonplaceholder.typicode.com/todos/')
       .pickAndVerify({ query: 'status', expected: 200, toBe: '==' })
       .pickStep(1)
       .pickData('data[0].{id: id}')
