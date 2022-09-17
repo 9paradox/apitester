@@ -1,6 +1,10 @@
 import path from 'path';
 import fs from 'fs';
 
+function folderExists(folderPath: string): boolean {
+  return fileExists(folderPath);
+}
+
 function fileExists(filePath: string): boolean {
   if (path.isAbsolute(filePath)) {
     return fs.existsSync(path.resolve(filePath));
@@ -18,6 +22,7 @@ function readFile(filePath: string): string {
 const Helper = {
   fileExists,
   readFile,
+  folderExists,
 };
 
 export default Helper;
