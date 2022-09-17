@@ -5,9 +5,11 @@ import Helper from './helpers';
 import {
   FormatTemplateOptions,
   GetOptions,
+  LogFileResult,
   PickAndVerifyOptions,
   PostOptions,
   QueryLang,
+  Step,
   ToBe,
   VerificationResult,
   VerifyOptions,
@@ -35,17 +37,18 @@ export async function get(options: GetOptions): Promise<any> {
     } as AxiosRequestConfig;
   }
 
-  return await axios.get(url, config);
+  const { data, status, statusText } = await axios.get(url, config);
+  return { data, status, statusText };
 }
 
 export async function post(options: PostOptions): Promise<any> {
   var url = options?.url;
-  var data = options?.data;
+  var reqData = options?.data;
   var config =
     typeof options !== 'string' ? (options as AxiosRequestConfig) : undefined;
 
   if (!url) url = config?.url;
-  if (!data) data = config?.data;
+  if (!reqData) reqData = config?.data;
 
   if (!url) throw new Error('Invalid url');
   if (!url) throw new Error('Invalid data');
@@ -64,7 +67,8 @@ export async function post(options: PostOptions): Promise<any> {
     } as AxiosRequestConfig;
   }
 
-  return await axios.post(url, data, config);
+  const { data, status, statusText } = await axios.post(url, reqData, config);
+  return { data, status, statusText };
 }
 
 export function getQueryLang(query: string): {
@@ -270,4 +274,29 @@ export async function verify(
     actualData,
     message: comparison.message,
   };
+}
+
+export async function logStepToFile(
+  folderPath: string,
+  step: Step
+): Promise<LogFileResult> {
+  try {
+    const dateTimeStr = Helper.getDateTimeString();
+    var filePath =
+      step.action.replace(/[^a-z0-9]/gi, '_').toLowerCase() +
+      '_' +
+      dateTimeStr +
+      '.txt';
+
+    filePath = Helper.joinPaths(folderPath, filePath);
+    const text = JSON.stringify(step, undefined, 2);
+    Helper.writeToFile(filePath, text);
+    return {
+      filePath: filePath,
+    };
+  } catch (e) {
+    return {
+      filePath: null,
+    };
+  }
 }

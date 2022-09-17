@@ -19,10 +19,41 @@ function readFile(filePath: string): string {
   return fs.readFileSync(path.resolve(process.cwd(), filePath), 'utf-8');
 }
 
+function pad(number: number, length: number) {
+  var str = '' + number;
+  while (str.length < length) {
+    str = '0' + str;
+  }
+  return str;
+}
+
+function getDateTimeString() {
+  const date = new Date();
+  var yyyy = date.getFullYear().toString();
+  var MM = pad(date.getMonth() + 1, 2);
+  var dd = pad(date.getDate(), 2);
+  var hh = pad(date.getHours(), 2);
+  var mm = pad(date.getMinutes(), 2);
+  var ss = pad(date.getSeconds(), 2);
+
+  return yyyy + MM + dd + hh + mm + ss;
+}
+
+function joinPaths(path1: string, path2: string): string {
+  return path.join(path1, path2);
+}
+
+function writeToFile(filePath: string, text: string) {
+  fs.writeFileSync(filePath, text);
+}
+
 const Helper = {
   fileExists,
   readFile,
   folderExists,
+  getDateTimeString,
+  joinPaths,
+  writeToFile,
 };
 
 export default Helper;

@@ -6,6 +6,7 @@ import {
   pickDataAndVerify,
   verify,
   formatTemplate,
+  logStepToFile,
 } from './actions';
 import TestCase from './testcase';
 import { Step, Optional, VerificationResult } from './types';
@@ -73,6 +74,9 @@ export default async function performAction(
       );
       break;
 
+    case 'log':
+      outputData = await logStepToFile(currentStep.inputData, lastStep);
+      break;
     default:
       throw new Error(`'${currentStep.action}' method is not implemented.`);
   }

@@ -6,6 +6,7 @@ export type ActionName = keyof IActions | 'TEST_CASE';
 export enum StepType {
   Action = 'Action',
   Verification = 'Verification',
+  Logging = 'Logging',
 }
 
 export type Optional<T> = T | undefined;
@@ -16,6 +17,7 @@ export interface Step {
   action: ActionName;
   inputData: any;
   outputData: any;
+  logFile?: string | null;
   verified: Optional<boolean>;
 }
 
@@ -56,6 +58,7 @@ export interface TestCaseOptions {
   title?: string;
   dataFilePath?: string;
   steps?: StepOptions[];
+  logPath?: string;
 }
 
 export type ToBe =
@@ -108,4 +111,8 @@ export interface StepResult {
 export interface StepOptions {
   action: ActionName;
   inputData: any;
+}
+
+export interface LogFileResult {
+  filePath: string | null;
 }

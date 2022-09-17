@@ -25,15 +25,24 @@ export interface IActions {
   addStep(options: StepOptions): TestCase;
   getStep(index: number): Step;
   data(key: string): any;
+  log(): TestCase;
   test(): Promise<TestCaseResult>;
 }
 
 export function getStepType(actionName: ActionName): StepType {
-  const keys = ['verify'];
   const name = actionName.toLocaleLowerCase();
-  return keys.find((k) => name.includes(k))?.length ?? 0 > 0
-    ? StepType.Verification
-    : StepType.Action;
+  const logKeys = ['log'];
+  const verifyKeys = ['verify'];
+
+  if (verifyKeys.find((k) => name.includes(k))?.length ?? 0 > 0) {
+    return StepType.Verification;
+  }
+
+  if (logKeys.find((k) => name.includes(k))?.length ?? 0 > 0) {
+    return StepType.Logging;
+  }
+
+  return StepType.Action;
 }
 
 interface ApiTester {

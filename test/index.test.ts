@@ -4,6 +4,7 @@ describe('apitester', () => {
   it('should perform overall test actions and verifications', async () => {
     const test = apitester.createTestCase({
       dataFilePath: './test/test-data.json',
+      logPath: 'd:/apitester_logs/',
     });
 
     const testResult = await test
@@ -13,6 +14,8 @@ describe('apitester', () => {
       .pickData('data[0].{id: id}')
       .formatData('https://jsonplaceholder.typicode.com/todos/<%= it.id %>')
       .get()
+      .log()
+      .pickStep(6)
       .pickData('data.title')
       .verify('delectus aut autem')
       .addStep({ action: 'pickStep', inputData: 6 })
@@ -23,7 +26,7 @@ describe('apitester', () => {
       })
       .post()
       .pickAndVerify({ query: 'status', expected: [200, 201], toBe: 'in' })
-      .pickStep(12)
+      .pickStep(13)
       .pickData('data.title')
       .verify(test.data('delectus_aut_autem'))
       .test();

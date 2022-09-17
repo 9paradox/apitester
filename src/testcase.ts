@@ -22,6 +22,7 @@ export default class TestCase implements IActions {
   steps: Step[];
   stepIndex: number;
   dataSource: DataSource;
+  options?: TestCaseOptions;
 
   constructor(options?: TestCaseOptions) {
     this.steps = [
@@ -35,8 +36,8 @@ export default class TestCase implements IActions {
       },
     ];
     this.stepIndex = 0;
-
     this.dataSource = {};
+    this.options = options;
 
     if (options?.dataFilePath && !Helper.fileExists(options.dataFilePath)) {
       throw new Error('Data file not found.');
@@ -48,6 +49,10 @@ export default class TestCase implements IActions {
 
     if (options?.steps && options.steps.length > 0) {
       this.addSteps(options?.steps);
+    }
+
+    if (options?.logPath && !Helper.folderExists(options.logPath)) {
+      throw new Error('Log folder not found.');
     }
   }
 
@@ -113,6 +118,11 @@ export default class TestCase implements IActions {
 
   post(options?: PostOptions): TestCase {
     this.recordStep('post', StepType.Action, options);
+    return this;
+  }
+
+  log(): TestCase {
+    this.recordStep('log', StepType.Logging, this.options?.logPath);
     return this;
   }
 
