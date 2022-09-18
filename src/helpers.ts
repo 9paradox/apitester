@@ -39,6 +39,15 @@ function getDateTimeString() {
   return yyyy + MM + dd + hh + mm + ss;
 }
 
+function getTimeSpan(startDateTime: string, endDateTime: string) {
+  const start = new Date(startDateTime).getTime();
+  const end = new Date(endDateTime).getTime();
+
+  const diff = end - start;
+  const seconds = Math.floor((diff / 1000) % 60);
+  return { ms: diff, s: seconds };
+}
+
 function joinPaths(path1: string, path2: string): string {
   return path.join(path1, path2);
 }
@@ -54,6 +63,7 @@ const Helper = {
   getDateTimeString,
   joinPaths,
   writeToFile,
+  getTimeSpan,
 };
 
 export default Helper;

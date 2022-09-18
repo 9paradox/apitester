@@ -19,6 +19,9 @@ export interface Step {
   outputData: any;
   logFile?: string | null;
   verified: Optional<boolean>;
+  startedAt?: string;
+  endedAt?: string;
+  timeTaken?: { ms: number; s: number };
 }
 
 export interface TestCaseResult {
@@ -54,11 +57,23 @@ export interface SimplePostConfig {
 
 export type PostOptions = SimplePostConfig | AxiosRequestConfig | undefined;
 
+export interface CallbackData {
+  type: 'before' | 'after';
+  stepNumber: number;
+  stepType: StepType;
+  action: ActionName;
+  stepResult?: StepResult;
+  startedAt?: string;
+  endedAt?: string;
+  timeTakenMs?: number;
+}
+
 export interface TestCaseOptions {
   title?: string;
   dataFilePath?: string;
   steps?: StepOptions[];
   logPath?: string;
+  callback?: (data: CallbackData) => void;
 }
 
 export type ToBe =

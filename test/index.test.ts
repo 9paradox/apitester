@@ -5,6 +5,9 @@ describe('apitester', () => {
     const test = apitester.createTestCase({
       dataFilePath: './test/test-data.json',
       logPath: 'd:/apitester_logs/',
+      callback: (data) => {
+        if (data.action == 'get') console.log(data);
+      },
     });
 
     const testResult = await test

@@ -16,6 +16,7 @@ import {
   VerifyOptions,
   StepResult,
   StepOptions,
+  CallbackData,
 } from './types';
 
 export default class TestCase implements IActions {
@@ -200,10 +201,27 @@ export default class TestCase implements IActions {
       testCaseStatus.lastVerificationStep = index;
     }
 
+    currentStep.startedAt = new Date().toISOString();
+
+    this.stepCallback({
+      type: 'before',
+      action: currentStep.action,
+      stepType: currentStep.type,
+      stepNumber: currentStep.index,
+      startedAt: currentStep.startedAt,
+    });
+
     const { inputData, outputData, verification } = await performAction(
       this,
       currentStep,
       lastStep
+    );
+
+    currentStep.endedAt = new Date().toISOString();
+
+    currentStep.timeTaken = Helper.getTimeSpan(
+      currentStep.startedAt,
+      currentStep.endedAt
     );
 
     this.setOutputData(index, outputData);
@@ -224,7 +242,21 @@ export default class TestCase implements IActions {
       }
     }
 
+    this.stepCallback({
+      type: 'after',
+      action: currentStep.action,
+      stepType: currentStep.type,
+      stepNumber: currentStep.index,
+      stepResult: stepResult,
+      endedAt: currentStep.endedAt,
+      timeTakenMs: currentStep.timeTaken?.ms,
+    });
+
     return stepResult;
+  }
+
+  stepCallback(data: CallbackData) {
+    if (this.options?.callback) this.options?.callback(data);
   }
 
   recordStep(
