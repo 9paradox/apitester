@@ -17,6 +17,7 @@ import {
   StepResult,
   StepOptions,
   CallbackData,
+  CustomFunction,
 } from './types';
 
 export default class TestCase implements IActions {
@@ -124,6 +125,11 @@ export default class TestCase implements IActions {
 
   log(): TestCase {
     this.recordStep('log', StepType.Logging, this.options?.logPath);
+    return this;
+  }
+
+  custom(stepType: StepType, fn: CustomFunction): TestCase {
+    this.recordStep('custom', stepType, fn);
     return this;
   }
 

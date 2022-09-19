@@ -77,6 +77,18 @@ export default async function performAction(
     case 'log':
       outputData = await logStepToFile(currentStep.inputData, lastStep);
       break;
+
+    case 'custom':
+      const customFnResult = currentStep.inputData(
+        testCase,
+        currentStep,
+        lastStep
+      );
+      inputData = customFnResult.inputData;
+      outputData = customFnResult.outputData;
+      verification = customFnResult.verification;
+      break;
+
     default:
       throw new Error(`'${currentStep.action}' method is not implemented.`);
   }

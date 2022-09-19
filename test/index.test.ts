@@ -1,4 +1,5 @@
 import apitester from '../src/index';
+import { StepType } from '../src/types';
 
 describe('apitester', () => {
   it('should perform overall test actions and verifications', async () => {
@@ -6,7 +7,7 @@ describe('apitester', () => {
       dataFilePath: './test/test-data.json',
       logPath: 'd:/apitester_logs/',
       callback: (data) => {
-        if (data.action == 'get') console.log(data);
+        if (data.stepNumber == 1 && data.type == 'after') console.log(data);
       },
     });
 
@@ -31,7 +32,17 @@ describe('apitester', () => {
       .pickAndVerify({ query: 'status', expected: [200, 201], toBe: 'in' })
       .pickStep(13)
       .pickData('data.title')
-      .verify(test.data('delectus_aut_autem'))
+      .custom(StepType.Action, (testCase, currentStep, lastStep) => {
+        var output = test.data('delectus_aut_autem');
+        if (lastStep.outputData == output) {
+          output = (output as string).toUpperCase();
+        }
+        return {
+          inputData: lastStep.outputData,
+          outputData: output,
+        };
+      })
+      .verify('DELECTUS AUT AUTEM')
       .test();
 
     if (!testResult.success) {

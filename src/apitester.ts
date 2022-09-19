@@ -1,6 +1,7 @@
 import TestCase from './testcase';
 import {
   ActionName,
+  CustomFunction,
   FormatTemplateOptions,
   GetOptions,
   PickAndVerifyOptions,
@@ -25,6 +26,7 @@ export interface IActions {
   addStep(options: StepOptions): TestCase;
   getStep(index: number): Step;
   data(key: string): any;
+  custom(stepType: StepType, fn: CustomFunction): TestCase;
   log(): TestCase;
   test(): Promise<TestCaseResult>;
 }

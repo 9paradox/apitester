@@ -1,5 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 import { IActions } from './apitester';
+import TestCase from './testcase';
 
 export type ActionName = keyof IActions | 'TEST_CASE';
 
@@ -131,3 +132,13 @@ export interface StepOptions {
 export interface LogFileResult {
   filePath: string | null;
 }
+
+export type CustomFunction = (
+  testCase: TestCase,
+  currentStep: Step,
+  lastStep: Step
+) => {
+  inputData: any;
+  outputData: any;
+  verification?: VerificationResult;
+};
