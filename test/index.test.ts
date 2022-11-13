@@ -5,7 +5,7 @@ describe('apitester', () => {
   it('should perform overall test actions and verifications', async () => {
     const test = apitester.createTestCase({
       dataFilePath: './test/test-data.json',
-      logPath: 'd:/apitester_logs/',
+      logPath: './logs',
       callback: (data) => {
         if (data.stepNumber == 1 && data.type == 'after') console.log(data);
       },

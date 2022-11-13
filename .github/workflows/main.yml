@@ -19,6 +19,10 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
+      - name: Create logs dir
+        run: |
+          mkdir logs
+
       - name: Install deps and build (with cache)
         uses: bahmutov/npm-install@v1
 
