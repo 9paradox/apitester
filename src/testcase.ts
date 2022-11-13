@@ -1,26 +1,25 @@
-import { getStepType, IActions } from './apitester';
-import Helper from './helpers';
-import performAction from './perform-actions';
+import Helper from './utils/helpers';
+import performAction from './mapActions';
 import {
   Step,
   StepType,
   TestCaseResult,
   Optional,
-  ActionName,
-  GetOptions,
-  PostOptions,
   TestCaseOptions,
-  PickAndVerifyOptions,
   DataSource,
-  FormatTemplateOptions,
-  VerifyOptions,
   StepResult,
   StepOptions,
   CallbackData,
   CustomFunction,
 } from './types';
+import { FormatTemplateOptions } from './actions/formatTemplate';
+import { VerifyOptions } from './actions/verify';
+import { PickAndVerifyOptions } from './actions/pickDataAndVerify';
+import { ActionName, getStepType } from './actions';
+import { PostOptions } from './actions/post';
+import { GetOptions } from './actions/get';
 
-export default class TestCase implements IActions {
+export class TestCase {
   steps: Step[];
   stepIndex: number;
   dataSource: DataSource;

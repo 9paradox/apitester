@@ -1,8 +1,6 @@
-import { AxiosRequestConfig } from 'axios';
-import { IActions } from './apitester';
-import TestCase from './testcase';
-
-export type ActionName = keyof IActions | 'TEST_CASE';
+import { ActionName } from './actions';
+import { VerificationResult } from './actions/types';
+import { TestCase } from './testcase';
 
 export enum StepType {
   Action = 'Action',
@@ -25,6 +23,12 @@ export interface Step {
   timeTaken?: { ms: number; s: number };
 }
 
+interface Error {
+  title: string;
+  message?: string;
+  type: 'error' | 'exception';
+}
+
 export interface TestCaseResult {
   success: boolean;
   totalSteps: number;
@@ -35,28 +39,13 @@ export interface TestCaseResult {
   totalSuccessfulVerificationSteps: number;
   lastVerificationStep: number;
   steps: Step[];
-  error?: { title: string; message?: string; type: 'error' | 'exception' };
+  error?: Error;
 }
 
 export enum QueryLang {
   jmespath = 'jmespath',
   jsonata = 'jsonata',
 }
-
-export interface VerificationResult {
-  verified: boolean;
-  actualData: any;
-  message?: string;
-}
-
-export type GetOptions = string | AxiosRequestConfig | undefined;
-
-export interface SimplePostConfig {
-  url: string;
-  data: any;
-}
-
-export type PostOptions = SimplePostConfig | AxiosRequestConfig | undefined;
 
 export interface CallbackData {
   type: 'before' | 'after';
@@ -77,47 +66,9 @@ export interface TestCaseOptions {
   callback?: (data: CallbackData) => void;
 }
 
-export type ToBe =
-  | 'equal'
-  | '=='
-  | 'notEqual'
-  | '!='
-  | 'greaterThan'
-  | '>'
-  | 'greaterThanOrEqual'
-  | '>='
-  | 'lessThan'
-  | '<'
-  | 'lessThanOrEqual'
-  | '<='
-  | 'in'
-  | 'notIn'
-  | 'contains';
-
-export interface PickAndVerifyOptions {
-  query: string;
-  expected: any;
-  toBe?: ToBe;
-}
-
-export type VerifyOptions =
-  | string
-  | {
-      expected: any;
-      toBe?: ToBe;
-    };
-
 export interface DataSource {
   [key: string]: any;
 }
-
-export type FormatTemplateOptions =
-  | string
-  | {
-      filePath: string;
-      outputDataFormat: 'string' | 'number' | 'boolean' | 'object';
-    }
-  | undefined;
 
 export interface StepResult {
   success: boolean;
@@ -127,10 +78,6 @@ export interface StepResult {
 export interface StepOptions {
   action: ActionName;
   inputData: any;
-}
-
-export interface LogFileResult {
-  filePath: string | null;
 }
 
 export type CustomFunction = (

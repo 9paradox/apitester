@@ -1,15 +1,14 @@
-import {
-  get,
-  post,
-  pickJsonData,
-  formatData,
-  pickDataAndVerify,
-  verify,
-  formatTemplate,
-  logStepToFile,
-} from './actions';
-import TestCase from './testcase';
-import { Step, Optional, VerificationResult } from './types';
+import { logStepToFile } from './actions/logStepToFile';
+import { verify } from './actions/verify';
+import { pickDataAndVerify } from './actions/pickDataAndVerify';
+import { formatTemplate } from './actions/formatTemplate';
+import { formatData } from './actions/formatData';
+import { pickJsonData } from './actions/pickJsonData';
+import { Step, Optional } from './types';
+import { get } from './actions/get';
+import { post } from './actions/post';
+import { VerificationResult } from './actions/types';
+import { TestCase } from './testcase';
 
 export default async function performAction(
   testCase: TestCase,
