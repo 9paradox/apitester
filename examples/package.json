@@ -1,6 +1,6 @@
 {
   "name": "apitester-examples",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Example for using apitester package",
   "main": "index.js",
   "scripts": {
@@ -9,6 +9,6 @@
   "author": "Paradox",
   "license": "MIT",
   "dependencies": {
-    "@9paradox/apitester": "^0.0.2"
+    "@9paradox/apitester": "^0.0.3"
   }
 }
