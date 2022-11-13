@@ -1,33 +1,83 @@
+import Helper from './utils/helpers';
+import performAction from './mapActions';
 import {
-  get,
-  pickJsonData,
-  formatData,
-  pickDataAndVerify,
-  verify,
-} from './actions';
-import { IActions } from './apitester';
-import { Step, StepType, TestCaseResult, Optional, ActionName } from './types';
+  Step,
+  StepType,
+  TestCaseResult,
+  Optional,
+  TestCaseOptions,
+  DataSource,
+  StepResult,
+  StepOptions,
+  CallbackData,
+  CustomFunction,
+} from './types';
+import { FormatTemplateOptions } from './actions/formatTemplate';
+import { VerifyOptions } from './actions/verify';
+import { PickAndVerifyOptions } from './actions/pickDataAndVerify';
+import { ActionName, getStepType } from './actions';
+import { PostOptions } from './actions/post';
+import { GetOptions } from './actions/get';
 
-export default class TestCase implements IActions {
+export class TestCase {
   steps: Step[];
   stepIndex: number;
+  dataSource: DataSource;
+  options?: TestCaseOptions;
 
-  constructor(title: string) {
+  constructor(options?: TestCaseOptions) {
     this.steps = [
       {
         action: 'TEST_CASE',
         type: StepType.Action,
         index: 0,
-        inputData: title,
+        inputData: options?.title,
         outputData: {},
         verified: undefined,
       },
     ];
     this.stepIndex = 0;
+    this.dataSource = {};
+    this.options = options;
+
+    if (options?.dataFilePath && !Helper.fileExists(options.dataFilePath)) {
+      throw new Error('Data file not found.');
+    }
+
+    if (options?.dataFilePath && Helper.fileExists(options.dataFilePath)) {
+      this.dataSource = JSON.parse(Helper.readFile(options.dataFilePath));
+    }
+
+    if (options?.steps && options.steps.length > 0) {
+      this.addSteps(options?.steps);
+    }
+
+    if (options?.logPath && !Helper.folderExists(options.logPath)) {
+      throw new Error('Log folder not found.');
+    }
   }
 
-  withLastStep_Verify(expected: any): TestCase {
-    this.recordStep('withLastStep_Verify', StepType.Verification, expected);
+  addSteps(steps: StepOptions[]): TestCase {
+    steps.forEach((step) => {
+      this.addStep(step);
+    });
+    return this;
+  }
+
+  formatTemplate(options: FormatTemplateOptions): TestCase {
+    this.recordStep('formatTemplate', StepType.Action, options);
+    return this;
+  }
+
+  data(key: string): any {
+    if (!this.dataSource.hasOwnProperty(key))
+      throw new Error('Key not found in the data source.');
+
+    return this.dataSource[key];
+  }
+
+  verify(option: VerifyOptions): TestCase {
+    this.recordStep('verify', StepType.Verification, option);
     return this;
   }
 
@@ -36,26 +86,18 @@ export default class TestCase implements IActions {
     return this;
   }
 
-  withLastStep_pickAndVerify(query: string, expected: any): TestCase {
-    this.recordStep('withLastStep_pickAndVerify', StepType.Verification, {
-      query: query,
-      expected: expected,
-    });
+  pickAndVerify(options: PickAndVerifyOptions): TestCase {
+    this.recordStep('pickAndVerify', StepType.Verification, options);
     return this;
   }
 
-  withLastStep_formatData(templateData: string): TestCase {
-    this.recordStep('withLastStep_formatData', StepType.Action, templateData);
+  formatData(templateData: string): TestCase {
+    this.recordStep('formatData', StepType.Action, templateData);
     return this;
   }
 
-  withLastStep_simpleGet(): TestCase {
-    this.recordStep('withLastStep_simpleGet', StepType.Action, null);
-    return this;
-  }
-
-  withLastStep_pickData(query: string): TestCase {
-    this.recordStep('withLastStep_pickData', StepType.Action, query);
+  pickData(query: string): TestCase {
+    this.recordStep('pickData', StepType.Action, query);
     return this;
   }
 
@@ -64,23 +106,44 @@ export default class TestCase implements IActions {
     return this.steps[index];
   }
 
-  simpleGet(url: string): TestCase {
-    this.recordStep('simpleGet', StepType.Action, url);
+  addStep(options: StepOptions): TestCase {
+    const stepType = getStepType(options.action);
+    this.recordStep(options.action, stepType, options.inputData);
+    return this;
+  }
+
+  get(options?: GetOptions): TestCase {
+    this.recordStep('get', StepType.Action, options);
+    return this;
+  }
+
+  post(options?: PostOptions): TestCase {
+    this.recordStep('post', StepType.Action, options);
+    return this;
+  }
+
+  log(): TestCase {
+    this.recordStep('log', StepType.Logging, this.options?.logPath);
+    return this;
+  }
+
+  custom(stepType: StepType, fn: CustomFunction): TestCase {
+    this.recordStep('custom', stepType, fn);
     return this;
   }
 
   async test(): Promise<TestCaseResult> {
-    return await this._test();
+    return await this.testCaseRunner();
   }
 
-  async _test(): Promise<TestCaseResult> {
+  async testCaseRunner(): Promise<TestCaseResult> {
     const totalSteps = this.steps.length;
 
     const totalVerificationSteps = this.steps.filter(
       (s) => s.type == StepType.Verification
     ).length;
 
-    var testCaseStatus: TestCaseResult = {
+    var testCaseResults: TestCaseResult = {
       success: false,
       totalSteps: totalSteps,
       executedSteps: 0,
@@ -92,90 +155,113 @@ export default class TestCase implements IActions {
       steps: [...this.steps],
     };
 
+    var shouldContinue = false;
     for (let index = 1; index < totalSteps; index++) {
-      const currentStep = this.getStep(index);
-      const lastStep = this.getStep(index - 1);
-
-      var inputData: any = null;
-      var outputData: any;
-      var verified: Optional<boolean> = undefined;
-
-      testCaseStatus.executedSteps++;
-      testCaseStatus.lastExecutedStep = index;
-
-      if (currentStep.type == StepType.Verification) {
-        testCaseStatus.executedVerificationSteps++;
-        testCaseStatus.lastVerificationStep = index;
+      try {
+        const stepResult = await this.performStep(index, testCaseResults);
+        shouldContinue = stepResult.success;
+        if (!shouldContinue) {
+          testCaseResults.error = {
+            type: 'error',
+            title: 'Error occurred on step: ' + index,
+            message: stepResult.message,
+          };
+        }
+      } catch (ex) {
+        shouldContinue = false;
+        testCaseResults.error = {
+          type: 'exception',
+          title: 'Exception occurred on step: ' + index,
+          message: JSON.stringify(ex),
+        };
       }
-
-      switch (currentStep.action) {
-        case 'TEST_CASE':
-          break;
-
-        case 'simpleGet':
-          outputData = await get(currentStep.inputData);
-          break;
-
-        case 'withLastStep_simpleGet':
-          inputData = lastStep.outputData;
-          outputData = await get(lastStep.outputData);
-          break;
-
-        case 'withLastStep_pickData':
-          outputData = await pickJsonData(
-            lastStep.outputData,
-            currentStep.inputData
-          );
-          break;
-
-        case 'withLastStep_formatData':
-          outputData = await formatData(
-            currentStep.inputData,
-            lastStep.outputData
-          );
-          break;
-
-        case 'withLastStep_pickAndVerify':
-          outputData = await pickDataAndVerify(
-            lastStep.outputData,
-            currentStep.inputData.query,
-            currentStep.inputData.expected
-          );
-          verified = outputData.verified;
-          break;
-
-        case 'pickStep':
-          outputData = this.getStep(currentStep.inputData).outputData;
-          break;
-
-        case 'withLastStep_Verify':
-          outputData = await verify(lastStep.outputData, currentStep.inputData);
-          verified = outputData.verified;
-          break;
-
-        default:
-          throw new Error(`'${currentStep.action}' method is not implemented.`);
-      }
-
-      this.setOutputData(currentStep.index, outputData);
-
-      if (verified !== undefined)
-        this.setStepVerifiedStatus(currentStep.index, verified);
-
-      if (inputData) this.setInputData(currentStep.index, inputData);
+      if (shouldContinue == false) break;
     }
 
-    testCaseStatus.steps = [...this.steps];
+    testCaseResults.steps = [...this.steps];
 
-    testCaseStatus.totalSuccessfulVerificationSteps = this.steps.filter(
+    testCaseResults.totalSuccessfulVerificationSteps = this.steps.filter(
       (s) => s.type == StepType.Verification && s.verified == true
     ).length;
 
-    testCaseStatus.success =
-      testCaseStatus.totalSuccessfulVerificationSteps ==
-      testCaseStatus.totalVerificationSteps;
+    testCaseResults.success =
+      testCaseResults.totalSuccessfulVerificationSteps ==
+      testCaseResults.totalVerificationSteps;
 
-    return testCaseStatus;
+    return testCaseResults;
+  }
+
+  private async performStep(
+    index: number,
+    testCaseStatus: TestCaseResult
+  ): Promise<StepResult> {
+    const currentStep = this.getStep(index);
+    const lastStep = this.getStep(index - 1);
+
+    testCaseStatus.executedSteps++;
+    testCaseStatus.lastExecutedStep = index;
+
+    if (currentStep.type == StepType.Verification) {
+      testCaseStatus.executedVerificationSteps++;
+      testCaseStatus.lastVerificationStep = index;
+    }
+
+    currentStep.startedAt = new Date().toISOString();
+
+    this.stepCallback({
+      type: 'before',
+      action: currentStep.action,
+      stepType: currentStep.type,
+      stepNumber: currentStep.index,
+      startedAt: currentStep.startedAt,
+    });
+
+    const { inputData, outputData, verification } = await performAction(
+      this,
+      currentStep,
+      lastStep
+    );
+
+    currentStep.endedAt = new Date().toISOString();
+
+    currentStep.timeTaken = Helper.getTimeSpan(
+      currentStep.startedAt,
+      currentStep.endedAt
+    );
+
+    this.setOutputData(index, outputData);
+
+    if (verification !== undefined)
+      this.setStepVerifiedStatus(index, verification.verified);
+
+    if (inputData) this.setInputData(index, inputData);
+
+    var stepResult: StepResult = {
+      success: true,
+    };
+
+    if (currentStep.type == StepType.Verification) {
+      stepResult.success = verification?.verified ?? false;
+      if (verification?.message) {
+        stepResult.message = verification.message;
+      }
+    }
+
+    this.stepCallback({
+      type: 'after',
+      action: currentStep.action,
+      stepType: currentStep.type,
+      stepNumber: currentStep.index,
+      stepResult: stepResult,
+      endedAt: currentStep.endedAt,
+      timeTakenMs: currentStep.timeTaken?.ms,
+    });
+
+    return stepResult;
+  }
+
+  stepCallback(data: CallbackData) {
+    if (this.options?.callback) this.options?.callback(data);
   }
 
   recordStep(
