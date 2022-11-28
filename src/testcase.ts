@@ -16,9 +16,10 @@ import { FormatTemplateOptions } from './actions/formatTemplate';
 import { VerifyOptions } from './actions/verify';
 import { PickAndVerifyOptions } from './actions/pickDataAndVerify';
 import { ActionName, getStepType } from './actions';
-import { PostOptions } from './actions/post';
 import { GetOptions } from './actions/get';
 import { logStepToFile } from './actions/logStepToFile';
+import { AxiosOptions } from './actions/axiosReq';
+import { PostOptions } from './actions/post';
 
 export class TestCase {
   steps: Step[];
@@ -132,6 +133,11 @@ export class TestCase {
 
   post(options?: PostOptions): TestCase {
     this.recordStep('post', StepType.Action, options);
+    return this;
+  }
+
+  axios(options: AxiosOptions): TestCase {
+    this.recordStep('axios', StepType.Action, options);
     return this;
   }
 

@@ -38,6 +38,13 @@ export default async function performAction(
       outputData = await post(inputData);
       break;
 
+    case 'axios':
+      inputData = currentStep.inputData
+        ? currentStep.inputData
+        : lastStep.outputData;
+      outputData = await get(inputData);
+      break;
+
     case 'pickData':
       outputData = await pickJsonData(
         lastStep.outputData,
