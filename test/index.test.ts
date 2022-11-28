@@ -6,6 +6,7 @@ describe('apitester', () => {
     const test = apitester.createTestCase({
       dataFilePath: './test/test-data.json',
       logPath: './logs',
+      logEachStep: true,
       callback: (data) => {
         if (data.stepNumber == 1 && data.type == 'after') console.log(data);
       },

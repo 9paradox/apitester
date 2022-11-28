@@ -18,6 +18,7 @@ import { PickAndVerifyOptions } from './actions/pickDataAndVerify';
 import { ActionName, getStepType } from './actions';
 import { PostOptions } from './actions/post';
 import { GetOptions } from './actions/get';
+import { logStepToFile } from './actions/logStepToFile';
 
 export class TestCase {
   steps: Step[];
@@ -52,8 +53,20 @@ export class TestCase {
       this.addSteps(options?.steps);
     }
 
-    if (options?.logPath && !Helper.folderExists(options.logPath)) {
-      throw new Error('Log folder not found.');
+    if (options?.logPath || options?.logEachStep) {
+      if (options?.logPath && !Helper.folderExists(options.logPath)) {
+        throw new Error('Log folder not found.');
+      }
+      if (options?.logPath && options?.logEachStep) {
+        options.logPath = Helper.joinPaths(
+          options.logPath,
+          Helper.getDateTimeString()
+        );
+
+        if (Helper.createFolder(options.logPath)) {
+          throw new Error('Log folder not found.');
+        }
+      }
     }
   }
 
@@ -256,6 +269,10 @@ export class TestCase {
       endedAt: currentStep.endedAt,
       timeTakenMs: currentStep.timeTaken?.ms,
     });
+
+    if (this.options?.logEachStep) {
+      await logStepToFile(this.options.logPath!, lastStep);
+    }
 
     return stepResult;
   }

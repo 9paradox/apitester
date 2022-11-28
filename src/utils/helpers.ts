@@ -12,6 +12,13 @@ function fileExists(filePath: string): boolean {
   return fs.existsSync(path.resolve(process.cwd(), filePath));
 }
 
+function createFolder(folderPath: string): boolean {
+  if (!fileExists(folderPath)) {
+    fs.mkdirSync(folderPath, { recursive: true });
+  }
+  return false;
+}
+
 function readFile(filePath: string): string {
   if (path.isAbsolute(filePath)) {
     return fs.readFileSync(path.resolve(filePath), 'utf-8');
@@ -35,8 +42,9 @@ function getDateTimeString() {
   var hh = pad(date.getHours(), 2);
   var mm = pad(date.getMinutes(), 2);
   var ss = pad(date.getSeconds(), 2);
+  var ms = pad(date.getMilliseconds(), 2);
 
-  return yyyy + MM + dd + hh + mm + ss;
+  return yyyy + MM + dd + hh + mm + ss + ms;
 }
 
 function getTimeSpan(startDateTime: string, endDateTime: string) {
@@ -64,6 +72,7 @@ const Helper = {
   joinPaths,
   writeToFile,
   getTimeSpan,
+  createFolder,
 };
 
 export default Helper;
