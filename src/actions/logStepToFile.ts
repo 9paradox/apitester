@@ -12,6 +12,8 @@ export async function logStepToFile(
   try {
     const dateTimeStr = Helper.getDateTimeString();
     var filePath =
+      step.index +
+      '_' +
       step.action.replace(/[^a-z0-9]/gi, '_').toLowerCase() +
       '_' +
       dateTimeStr +

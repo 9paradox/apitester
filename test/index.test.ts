@@ -6,13 +6,17 @@ describe('apitester', () => {
     const test = apitester.createTestCase({
       dataFilePath: './test/test-data.json',
       logPath: './logs',
+      logEachStep: true,
       callback: (data) => {
         if (data.stepNumber == 1 && data.type == 'after') console.log(data);
       },
     });
 
     const testResult = await test
-      .get('https://jsonplaceholder.typicode.com/todos/')
+      .axios({
+        url: 'https://jsonplaceholder.typicode.com/todos/',
+        method: 'GET',
+      })
       .pickAndVerify({ query: 'status', expected: 200, toBe: '==' })
       .pickStep(1)
       .pickData('data[0].{id: id}')

@@ -63,6 +63,7 @@ export interface TestCaseOptions {
   dataFilePath?: string;
   steps?: StepOptions[];
   logPath?: string;
+  logEachStep?: boolean;
   callback?: (data: CallbackData) => void;
 }
 

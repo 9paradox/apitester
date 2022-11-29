@@ -6,6 +6,7 @@ import {
   StepType,
   TestCaseResult,
 } from '../types';
+import { AxiosOptions } from './axiosReq';
 import { FormatTemplateOptions } from './formatTemplate';
 import { GetOptions } from './get';
 import { PickAndVerifyOptions } from './pickDataAndVerify';
@@ -15,6 +16,7 @@ import { VerifyOptions } from './verify';
 export interface IActions {
   get(options?: GetOptions): TestCase;
   post(options?: PostOptions): TestCase;
+  axios(options: AxiosOptions): TestCase;
   pickData(query: string): TestCase;
   formatData(templateData: string): TestCase;
   formatTemplate(options: FormatTemplateOptions): TestCase;
