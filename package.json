@@ -1,6 +1,6 @@
 {
   "name": "@9paradox/apitester",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "MIT",
   "author": "Akshay Gaonkar (9paradox)",
   "main": "dist/index.js",
