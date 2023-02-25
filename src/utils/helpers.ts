@@ -1,5 +1,6 @@
 import path from 'path';
 import fs from 'fs';
+import { TestCaseOptions } from '../types';
 
 function folderExists(folderPath: string): boolean {
   return fileExists(folderPath);
@@ -64,6 +65,15 @@ function writeToFile(filePath: string, text: string) {
   fs.writeFileSync(filePath, text);
 }
 
+function buildTestCaseOptionsFromFile(testCasePath: string): TestCaseOptions {
+  if (testCasePath && !Helper.fileExists(testCasePath)) {
+    throw new Error('Test-case file not found.');
+  }
+
+  const testCaseOptions = JSON.parse(Helper.readFile(testCasePath));
+  return testCaseOptions;
+}
+
 const Helper = {
   fileExists,
   readFile,
@@ -73,6 +83,7 @@ const Helper = {
   writeToFile,
   getTimeSpan,
   createFolder,
+  buildTestCaseOptionsFromFile,
 };
 
 export default Helper;

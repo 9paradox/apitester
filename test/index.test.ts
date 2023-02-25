@@ -57,4 +57,20 @@ describe('apitester', () => {
 
     expect(testResult.success).toEqual(true);
   });
+
+  it('should run json test-case file ', async () => {
+    const test = apitester.createTestCaseFromJsonFile(
+      './test/test-case-example.json'
+    );
+
+    const testResult = await test.test();
+
+    if (!testResult.success) {
+      console.log(
+        testResult.error?.title + '\nError: ' + testResult.error?.message
+      );
+    }
+
+    expect(testResult.success).toEqual(true);
+  });
 });

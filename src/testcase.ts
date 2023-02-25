@@ -121,7 +121,12 @@ export class TestCase {
   }
 
   addStep(options: StepOptions): TestCase {
-    const stepType = getStepType(options.action);
+    var stepType = null;
+    try {
+      stepType = getStepType(options.action);
+    } catch (ex) {
+      throw new Error("Unable to create step, please check step for type/typo error.");
+    }
     this.recordStep(options.action, stepType, options.inputData);
     return this;
   }
