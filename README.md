@@ -25,7 +25,7 @@ Simple Nodejs example to get started.
 
 ```javascript
 //simple_test.js
-const  {  default: apitester }  =  require("@9paradox/apitester");
+const  { apitester }  =  require("@9paradox/apitester");
 
 const testcase = apitester.createTestCase({
       title: 'verify todos endpoint returns status 200',
