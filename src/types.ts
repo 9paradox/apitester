@@ -26,6 +26,7 @@ export interface Step {
 interface Error {
   title: string;
   message?: string;
+  exception?: string;
   type: 'error' | 'exception';
 }
 

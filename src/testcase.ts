@@ -121,7 +121,14 @@ export class TestCase {
   }
 
   addStep(options: StepOptions): TestCase {
-    const stepType = getStepType(options.action);
+    var stepType = null;
+    try {
+      stepType = getStepType(options.action);
+    } catch (ex) {
+      throw new Error(
+        'Unable to create step, please check step for type/typo error.'
+      );
+    }
     this.recordStep(options.action, stepType, options.inputData);
     return this;
   }
@@ -186,12 +193,13 @@ export class TestCase {
             message: stepResult.message,
           };
         }
-      } catch (ex) {
+      } catch (ex: any) {
         shouldContinue = false;
         testCaseResults.error = {
           type: 'exception',
           title: 'Exception occurred on step: ' + index,
-          message: JSON.stringify(ex),
+          message: ex?.message,
+          exception: JSON.stringify(ex),
         };
       }
       if (shouldContinue == false) break;

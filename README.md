@@ -25,7 +25,7 @@ Simple Nodejs example to get started.
 
 ```javascript
 //simple_test.js
-const  {  default: apitester }  =  require("@9paradox/apitester");
+const  { apitester }  =  require("@9paradox/apitester");
 
 const testcase = apitester.createTestCase({
       title: 'verify todos endpoint returns status 200',
@@ -219,8 +219,8 @@ Enum to identify which json query library to use.
 
 | Query string starts with | Values | Description                |
 | :-------- | :-------- | :------------------------- |
-| `@$jmespath` | `jmespath` | To denote the query will be performed using [jmespath](https://jmespath.org/).|
-| `@$jsonata` | `jsonata` | To denote the query will be performed using [jsonata](https://jsonata.org/). Note: jsonata query are work in progress in current release.|
+| `@jmespath` | `jmespath` | To denote the query will be performed using [jmespath](https://jmespath.org/).|
+| `@jsonata` | `jsonata` | To denote the query will be performed using [jsonata](https://jsonata.org/). Note: jsonata query are work in progress in current release.|
 
 
 #### Step

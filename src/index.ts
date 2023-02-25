@@ -1,2 +1,3 @@
 import { apitester } from './apitester';
-export default apitester;
+import Helper from './utils/helpers';
+export { apitester, Helper as testHelper };

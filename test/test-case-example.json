@@ -1,0 +1,41 @@
+{
+    "title": "apitester from json test-case file",
+    "steps": [
+        {
+            "action": "get",
+            "inputData": "https://jsonplaceholder.typicode.com/todos/"
+        },
+        {
+            "action": "pickAndVerify",
+            "inputData": {
+                "query": "status",
+                "expected": 200,
+                "toBe": "=="
+            }
+        },
+        {
+            "action": "pickStep",
+            "inputData": 1
+        },
+        {
+            "action": "pickData",
+            "inputData": "@jsonata data[0].{\"id\": id}"
+        },
+        {
+            "action": "formatData",
+            "inputData": "https://jsonplaceholder.typicode.com/todos/<%= it.id %>"
+        },
+        {
+            "action": "get",
+            "inputData": null
+        },
+        {
+            "action": "pickData",
+            "inputData": "data.title"
+        },
+        {
+            "action": "verify",
+            "inputData": "delectus aut autem"
+        }
+    ]
+}
