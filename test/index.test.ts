@@ -1,4 +1,4 @@
-import apitester from '../src/index';
+import { apitester } from '../src/index';
 import { StepType } from '../src/types';
 
 describe('apitester', () => {
