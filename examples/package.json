@@ -9,6 +9,6 @@
   "author": "Paradox",
   "license": "MIT",
   "dependencies": {
-    "@9paradox/apitester": "^0.0.4"
+    "@9paradox/apitester": "^0.0.5"
   }
 }

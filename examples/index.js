@@ -1,4 +1,4 @@
-const { default: apitester } = require("@9paradox/apitester");
+const { apitester } = require("@9paradox/apitester");
 
 apitester.createTestCase('should perform overall test actions and verifications')
     .get('https://jsonplaceholder.typicode.com/todos/')
