@@ -84,7 +84,7 @@ Create new testcase.
 | `logEachStep` | `boolean` | `no` | Used to enable logging each step. |
 | `callback` | `(data:  CallbackData)  =>  void` | `no` | Callback function called before and after each step.|
 
-#### apitester.createTestCase
+#### apitester.createTestCaseFromJsonFile
 
 Create new testcase from json test-case file.
 
@@ -95,6 +95,7 @@ Create new testcase from json test-case file.
 Make sure the json test case file follows `TestCaseOptions` schema.
 
 ```json
+
 {
     "title": "running apitester from example-test-case.json file",
     "steps": [
@@ -110,7 +111,9 @@ Make sure the json test case file follows `TestCaseOptions` schema.
                 "toBe": "=="
             }
         }
+	]
 }
+
 ```
 
 
@@ -279,7 +282,6 @@ Structure of a step.
 - Code refactor
 - Add more examples
 - Add support for XML.
-- Add full support for jsonata.
 
 ## License
 
