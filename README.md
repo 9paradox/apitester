@@ -111,6 +111,7 @@ Make sure the json test case file follows `TestCaseOptions` schema.
                 "toBe": "=="
             }
         }
+	]
 }
 
 ```
