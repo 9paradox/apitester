@@ -70,8 +70,10 @@ PRs adding more examples are very welcome!
 Create new testcase.
 
 ```javascript
-  const testcase = apitester.createTestCase({...});
+  const testcase = apitester.createTestCase({...}: TestCaseOptions);
 ```
+
+#### TestCaseOptions
 
 | Parameter | Type     |Required  | Description                |
 | :-------- | :------- | :------- | :------------------------- |
@@ -81,6 +83,36 @@ Create new testcase.
 | `logPath` | `string` | `no` | Logging folder path. |
 | `logEachStep` | `boolean` | `no` | Used to enable logging each step. |
 | `callback` | `(data:  CallbackData)  =>  void` | `no` | Callback function called before and after each step.|
+
+#### apitester.createTestCase
+
+Create new testcase from json test-case file.
+
+```javascript
+  const testcase = apitester.createTestCaseFromJsonFile('path-to-file/test-case.json');
+```
+
+Make sure the json test case file follows `TestCaseOptions` schema.
+
+```json
+{
+    "title": "running apitester from example-test-case.json file",
+    "steps": [
+        {
+            "action": "get",
+            "inputData": "https://jsonplaceholder.typicode.com/todos/"
+        },
+        {
+            "action": "pickAndVerify",
+            "inputData": {
+                "query": "status",
+                "expected": 200,
+                "toBe": "=="
+            }
+        }
+}
+```
+
 
 #### Action/Step methods
 
