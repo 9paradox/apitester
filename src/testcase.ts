@@ -186,12 +186,13 @@ export class TestCase {
             message: stepResult.message,
           };
         }
-      } catch (ex) {
+      } catch (ex: any) {
         shouldContinue = false;
         testCaseResults.error = {
           type: 'exception',
           title: 'Exception occurred on step: ' + index,
-          message: JSON.stringify(ex),
+          message: ex?.message,
+          exception: JSON.stringify(ex),
         };
       }
       if (shouldContinue == false) break;

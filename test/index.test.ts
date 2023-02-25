@@ -19,7 +19,7 @@ describe('apitester', () => {
       })
       .pickAndVerify({ query: 'status', expected: 200, toBe: '==' })
       .pickStep(1)
-      .pickData('data[0].{id: id}')
+      .pickData('@jsonata data[0].{"id": id}')
       .formatData('https://jsonplaceholder.typicode.com/todos/<%= it.id %>')
       .get()
       .log()

@@ -4,13 +4,19 @@ export function getQueryLang(query: string): {
   lang: QueryLang;
   query: string;
 } {
-  const querySegment = query.split('@$');
+  var querySegment = null;
+  for (let l in QueryLang) {
+    if (query.startsWith('@' + l)) {
+      querySegment = { lang: l, query: query.replace('@' + l + ' ', '') };
+      break;
+    }
+  }
 
-  if (querySegment.length <= 1)
+  if (querySegment == null)
     return { lang: QueryLang.jmespath, query: query.trim() };
 
-  const lang = querySegment[0].trim();
-  const queryStr = querySegment[1].trim();
+  const lang = querySegment.lang;
+  const queryStr = querySegment.query;
   switch (lang) {
     case QueryLang.jmespath:
       return { lang: QueryLang.jmespath, query: queryStr };
