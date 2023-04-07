@@ -1,0 +1,40 @@
+const { apitester } = require("@9paradox/apitester");
+
+const testcase = apitester.createTestCase({
+    title: 'verify user can login and update their details on dummyjson/user endpoint',
+});
+
+testcase
+    .axios({
+        url: 'https://dummyjson.com/auth/login',
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        data: {
+            username: 'kminchelle',
+            password: '0lelplR',
+        },
+    })
+    .pickAndVerify({ query: 'status', expected: 200, toBe: '==' })
+    .pickStep(1)
+    .pickAndVerify({
+        query: 'data.token',
+        expected: [null, undefined],
+        toBe: 'notIn',
+    })
+    .pickStep(1)
+    .pickData('@jsonata data.{"id": id}')
+    .formatTemplate({
+        filePath: 'user-update-template.txt',
+        outputDataFormat: 'object',
+    })
+    .axios()
+    .pickAndVerify({ query: 'status', expected: [200, 201], toBe: 'in' })
+    .test()
+    .then((testResult) => {
+        console.log('Testcase success:- ', testResult.success);
+        if (!testResult.success) {
+            console.log('Testcase failed:- ', testResult.error);
+            console.log('Testcase steps:- ', testResult.steps);
+        }
+    })
+    .catch((err) => console.log(err));

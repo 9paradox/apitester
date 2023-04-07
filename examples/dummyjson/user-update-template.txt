@@ -1,0 +1,7 @@
+{
+	"url": "https://dummyjson.com/users/<%= it.id %>",
+	"method": "put",
+	"data": {
+		"lastName": "newLastName"
+	}
+}
