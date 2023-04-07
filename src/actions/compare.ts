@@ -117,5 +117,11 @@ export function compare(
     default:
       throw new Error(`'${toBe}' comparison is not implemented.`);
   }
+
+  if (message && message.length > 0) {
+    message += ' Actual:- ' + JSON.stringify(actual);
+    message += ' Expected:- ' + JSON.stringify(expected);
+  }
+
   return { check, message };
 }

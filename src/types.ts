@@ -50,13 +50,8 @@ export enum QueryLang {
 
 export interface CallbackData {
   type: 'before' | 'after';
-  stepNumber: number;
-  stepType: StepType;
-  action: ActionName;
+  step: Step;
   stepResult?: StepResult;
-  startedAt?: string;
-  endedAt?: string;
-  timeTakenMs?: number;
 }
 
 export interface TestCaseOptions {
