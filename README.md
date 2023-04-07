@@ -4,6 +4,17 @@ A simple rest api testing package. Crafted with easy to use method call and meth
 
 🛠️ _This project is still in alpha stage and there might be breaking changes in stable release._ 🛠️
 
+## Features
+
+- Easily test entire api workflows.
+- Define testing steps directly in json file.
+- Log request and response.
+- Capture time and performance.
+- Load testcase data.
+- Load request and data templates.
+- Query data easily with [jmespath](https://jmespath.org/) or [jsonata](https://jsonata.org/).
+- Extend functionality using custom functions.
+
 ## Table of Contents
 
 - [Installation](https://github.com/9paradox/apitester#Installation)
@@ -36,8 +47,13 @@ const testcase = apitester.createTestCase({
 });
 
 testcase
+  //step 1. get results form /todos
   .get('https://jsonplaceholder.typicode.com/todos/')
+
+  //step 2. verify the status is success
   .pickAndVerify({ query: 'status', expected: 200 })
+
+  //perform the test
   .test()
   .then((testResult) => {
     console.log('Testcase success:- ', testResult.success);
@@ -150,8 +166,8 @@ User provided callback function which is called before and after each step.
 | Parameter    | Type                | Required | Description                                                 |
 | :----------- | :------------------ | :------- | :---------------------------------------------------------- |
 | `type`       | `before` or `after` | `yes`    | Used to identify if the callback is called before or after. |
-| `stepNumber` | `number`            | `yes`    | Index number of the step performed.                         |
-| `stepType`   | `StepType`          | `yes`    | Type of step.                                               |
+| `step`       | `Step`              | `yes`    | Current step.                                               |
+| `stepResult` | `StepResult`        | `no`     | Step success result updated in type 'after'.                |
 
 #### GetOptions
 
@@ -265,7 +281,7 @@ Structure of a step.
 | `outputData` | `any`                       | Output/return data from the action method.                     |
 | `verified`   | `Optional<boolean>`         | Indicator if the step has been verified against the assertion. |
 | `startedAt`  | `string`                    | Date time stamp of starting the step.                          |
-| `startedAt`  | `string`                    | Date time stamp of ending the step.                            |
+| `endedAt`    | `string`                    | Date time stamp of ending the step.                            |
 | `timeTaken`  | `{ ms: number; s: number }` | Time taken to execute the step.                                |
 
 #### TestCaseResult

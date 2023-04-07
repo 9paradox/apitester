@@ -237,10 +237,7 @@ export class TestCase {
 
     this.stepCallback({
       type: 'before',
-      action: currentStep.action,
-      stepType: currentStep.type,
-      stepNumber: currentStep.index,
-      startedAt: currentStep.startedAt,
+      step: currentStep,
     });
 
     const { inputData, outputData, verification } = await performAction(
@@ -276,12 +273,8 @@ export class TestCase {
 
     this.stepCallback({
       type: 'after',
-      action: currentStep.action,
-      stepType: currentStep.type,
-      stepNumber: currentStep.index,
+      step: currentStep,
       stepResult: stepResult,
-      endedAt: currentStep.endedAt,
-      timeTakenMs: currentStep.timeTaken?.ms,
     });
 
     if (this.options?.logEachStep) {
