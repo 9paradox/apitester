@@ -75,6 +75,10 @@ We can use apitester in any nodejs test project such as [jest](https://jestjs.io
 There are some more examples in the [examples](https://github.com/9paradox/apitester/tree/main/examples) folder.
 PRs adding more examples are very welcome!
 
+## Try online
+
+Check out these [demo](https://stackblitz.com/edit/apitester-examples-nodejs?file=README.md) testcase to get started with apitester.
+
 ## Method Reference
 
 #### apitester.createTestCase
