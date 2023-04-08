@@ -278,7 +278,8 @@ export class TestCase {
     });
 
     if (this.options?.logEachStep) {
-      await logStepToFile(this.options.logPath!, lastStep);
+      if (index == 1) await logStepToFile(this.options.logPath!, lastStep);
+      await logStepToFile(this.options.logPath!, currentStep);
     }
 
     return stepResult;

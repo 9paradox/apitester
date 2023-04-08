@@ -9,7 +9,7 @@ import { get } from './actions/get';
 import { post } from './actions/post';
 import { VerificationResult } from './actions/types';
 import { TestCase } from './testcase';
-import axios from 'axios';
+import { axiosReq } from './actions/axiosReq';
 
 export default async function performAction(
   testCase: TestCase,
@@ -43,7 +43,7 @@ export default async function performAction(
       inputData = currentStep.inputData
         ? currentStep.inputData
         : lastStep.outputData;
-      outputData = await axios(inputData);
+      outputData = await axiosReq(inputData);
       break;
 
     case 'pickData':
