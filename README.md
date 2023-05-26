@@ -31,12 +31,16 @@ npm i @9paradox/apitester
 
 ## Usage
 
-Simple Nodejs example to get started.
-
-1.  Initial step is to create a testcase using `apitester.createTestCase` or `apitester.createTestCaseFromJsonFile` function.
+1.  Initial step is to create a testcase using one of the following way:
+    - `apitester.createTestCase` function to write testcase through code.
+    - `apitester.createTestCaseFromJsonFile` function to build testcase from json file.
+    - `apitester.getJsonTestCasesFromFolder` function to get all json testcases from a folder.
 2.  The testcase can perform multiple steps/actions.
 3.  Each step/action requires input data. Some of the steps can use output data from previous step as input.
 4.  Finally we call `test()` function to start executing the testcase, which returns a `Promise`.
+    - In case of `apitester.getJsonTestCasesFromFolder`, we use `apitester.runTestCases(testcases)` to execute multiple testcases.
+
+Simple example to get started with `apitester.createTestCase`.
 
 ```javascript
 //simple_test.js
@@ -81,12 +85,12 @@ Check out these [demo](https://stackblitz.com/edit/apitester-examples-nodejs?fil
 
 ## Method Reference
 
-#### apitester.createTestCase
+#### `apitester.createTestCase(..)`
 
 Create new testcase.
 
 ```javascript
-  const testcase = apitester.createTestCase({...}: TestCaseOptions);
+const testcase = apitester.createTestCase({...}: TestCaseOptions);
 ```
 
 #### TestCaseOptions
@@ -100,7 +104,7 @@ Create new testcase.
 | `logEachStep`  | `boolean`                      | `no`     | Used to enable logging each step.                                                                                |
 | `callback`     | `(data: CallbackData) => void` | `no`     | Callback function called before and after each step.                                                             |
 
-#### apitester.createTestCaseFromJsonFile
+#### `apitester.createTestCaseFromJsonFile(..)`
 
 Create new testcase from json test-case file.
 
@@ -132,7 +136,31 @@ Make sure the json test case file follows `TestCaseOptions` schema.
 }
 ```
 
-#### Action/Step methods
+#### `apitester.getJsonTestCasesFromFolder(..)` and `apitester.runTestCases(..)`
+
+- We can test multiple json testcase from a given folder.
+- Testcase file name must end with `.test.json`, for example `simple-testcase.test.json`.
+- `apitester.runTestCases(..)` returns `MultiTestCaseResult`.
+
+```javascript
+//example folder with testcase
+//  path-to/
+//    -- json-testcases/
+//        -- my-testcase.test.json
+//        -- other_scenario.test.json
+
+const testCases = apitester.getJsonTestCasesFromFolder(
+  'path-to/json-testcases'
+);
+
+const multiTestCaseResult = await apitester.runTestCases(testCases);
+
+if (!multiTestCaseResult.success) {
+  console.log('Testcases failed: ' + multiTestCaseResult.failedTestCases);
+}
+```
+
+## Action/Step methods
 
 Once a new testcase is created, we can perform multiple steps/actions and finally call `test()` method to execute the test.
 
@@ -304,6 +332,17 @@ Return type for testcase `test()` method.
 | `lastVerificationStep`             | `number`  | `yes`    | Step number of last verification type of step that was executed.                               |
 | `steps`                            | `Step[]`  | `yes`    | List of all steps in the testcase.                                                             |
 | `error`                            | `Error`   | `no`     | Error object containing error details.                                                         |
+
+#### MultiTestCaseResult
+
+Structure of multi testcase execution.
+
+| Parameter         | Type               | Required | Description                                 |
+| :---------------- | :----------------- | :------- | :------------------------------------------ |
+| `success`         | `boolean`          | `yes`    | Denotes if all the testcase are successful. |
+| `failedTestCases` | `number`           | `yes`    | Total number of failed testcases.           |
+| `testCaseResults` | `TestCaseResult[]` | `yes`    | List of all testcase result.                |
+| `error`           | `Error`            | `no`     | Error object containing error details.      |
 
 #### Error
 
