@@ -6,7 +6,7 @@ import Helper from './utils/helpers';
 interface ApiTester {
   createTestCase: (options?: TestCaseOptions) => IActions;
   createTestCaseFromJsonFile: (testCasePath: string) => IActions;
-  createTestCasesFromJsonFiles: (folderPath: string) => IActions[];
+  getJsonTestCasesFromFolder: (folderPath: string) => IActions[];
   runTestCases: (testCases: IActions[]) => Promise<MultiTestCaseResult>;
 }
 
@@ -17,7 +17,7 @@ export const apitester: ApiTester = {
   createTestCaseFromJsonFile: (testCasePath: string) => {
     return new TestCase(Helper.buildTestCaseOptionsFromFile(testCasePath));
   },
-  createTestCasesFromJsonFiles(folderPath: string) {
+  getJsonTestCasesFromFolder(folderPath: string) {
     const testCaseFiles = Helper.getTestCasesFromFolder(folderPath);
     var testCases: IActions[] = [];
     for (const testCaseFile of testCaseFiles) {

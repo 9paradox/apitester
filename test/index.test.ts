@@ -75,7 +75,7 @@ describe('apitester', () => {
   });
 
   it('should run json test-case files from folder', async () => {
-    const testCases = apitester.createTestCasesFromJsonFiles(
+    const testCases = apitester.getJsonTestCasesFromFolder(
       './test/json-testcases'
     );
 
