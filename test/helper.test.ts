@@ -41,7 +41,10 @@ describe('Helper', () => {
   });
 
   it('should join two paths together', () => {
-    expect(Helper.joinPaths('./test', 'test.txt')).toBe('test\\test.txt');
+    const joinedPath = Helper.joinPaths('./test', 'test.txt');
+    expect(
+      joinedPath == 'test/test.txt' || joinedPath == 'test\\test.txt'
+    ).toBe(true);
   });
 
   it('should create folder, write text to a file and read file', () => {
