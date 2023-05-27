@@ -4,3 +4,4 @@ node_modules
 dist
 ./examples/node_modules
 logs
+temp-test

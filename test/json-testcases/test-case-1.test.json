@@ -1,0 +1,19 @@
+{
+    "title": "apitester from json test-case-1 file",
+    "logPath": "./logs",
+    "logEachStep": true,
+    "steps": [
+        {
+            "action": "get",
+            "inputData": "https://jsonplaceholder.typicode.com/todos/"
+        },
+        {
+            "action": "pickAndVerify",
+            "inputData": {
+                "query": "status",
+                "expected": 200,
+                "toBe": "=="
+            }
+        }
+    ]
+}

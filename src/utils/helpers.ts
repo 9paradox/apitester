@@ -74,6 +74,17 @@ function buildTestCaseOptionsFromFile(testCasePath: string): TestCaseOptions {
   return testCaseOptions;
 }
 
+function getTestCasesFromFolder(folderPath: string) {
+  if (!folderExists(folderPath)) {
+    throw new Error('Test-cases folder not found.');
+  }
+
+  const testCases = fs
+    .readdirSync(folderPath)
+    .filter((file) => file.endsWith('.test.json'));
+  return testCases;
+}
+
 const Helper = {
   fileExists,
   readFile,
@@ -84,6 +95,7 @@ const Helper = {
   getTimeSpan,
   createFolder,
   buildTestCaseOptionsFromFile,
+  getTestCasesFromFolder,
 };
 
 export default Helper;
