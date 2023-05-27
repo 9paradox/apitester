@@ -58,7 +58,7 @@ describe('apitester', () => {
     expect(testResult.success).toEqual(true);
   });
 
-  it('should run json test-case file ', async () => {
+  it('should run json test-case file', async () => {
     const test = apitester.createTestCaseFromJsonFile(
       './test/test-case-example.json'
     );
@@ -72,5 +72,19 @@ describe('apitester', () => {
     }
 
     expect(testResult.success).toEqual(true);
+  });
+
+  it('should run json test-case files from folder', async () => {
+    const testCases = apitester.getJsonTestCasesFromFolder(
+      './test/json-testcases'
+    );
+
+    const multiTestCaseResult = await apitester.runTestCases(testCases);
+
+    if (!multiTestCaseResult.success) {
+      console.log('Testcases failed: ' + multiTestCaseResult.failedTestCases);
+    }
+
+    expect(multiTestCaseResult.success).toEqual(true);
   });
 });

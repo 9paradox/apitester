@@ -43,6 +43,13 @@ export interface TestCaseResult {
   error?: Error;
 }
 
+export interface MultiTestCaseResult {
+  success: boolean;
+  failedTestCases: number;
+  testCaseResults: TestCaseResult[];
+  error?: Error;
+}
+
 export enum QueryLang {
   jmespath = 'jmespath',
   jsonata = 'jsonata',
