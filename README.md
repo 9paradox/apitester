@@ -81,7 +81,7 @@ PRs adding more examples are very welcome!
 
 ## Try online
 
-Check out these [demo](https://stackblitz.com/edit/apitester-examples-nodejs?file=README.md) testcase to get started with apitester.
+Check out these [demo](https://stackblitz.com/edit/apitester-examples-nodejs-d4tcen?file=README.md) testcase to get started with apitester.
 
 ## Method Reference
 
