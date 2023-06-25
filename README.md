@@ -160,6 +160,13 @@ if (!multiTestCaseResult.success) {
 }
 ```
 
+## apitester-creator
+
+Now easily create testcases with the online drag-and-drop tool - [apitester-creator](https://9paradox.com/apitester-creator/).
+
+Export json testcases and run them using `apitester.getJsonTestCasesFromFolder(..)` and `apitester.runTestCases(..)`.
+
+
 ## Action/Step methods
 
 Once a new testcase is created, we can perform multiple steps/actions and finally call `test()` method to execute the test.
