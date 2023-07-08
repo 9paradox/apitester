@@ -164,6 +164,8 @@ if (!multiTestCaseResult.success) {
 
 Now easily create testcases with the online drag-and-drop tool - [apitester-creator](https://9paradox.com/apitester-creator/).
 
+![Alt text](https://raw.githubusercontent.com/9paradox/apitester-creator/main/screenshot.png "try-jmespath screenshot")
+
 Export json testcases and run them using `apitester.getJsonTestCasesFromFolder(..)` and `apitester.runTestCases(..)`.
 
 
