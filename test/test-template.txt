@@ -1,5 +1,5 @@
 {
-    "url": "https://jsonplaceholder.typicode.com/posts",
+    "url": "http://localhost:3000/posts",
     "data": {"title":"<%= it.data.title %>","body":"<%= it.data.body %>","userId":<%= it.data.userId %>
     }
 }
