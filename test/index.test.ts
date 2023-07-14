@@ -2,9 +2,9 @@ import { apitester } from '../src/index';
 import { StepType } from '../src/types';
 import jsonServer from 'json-server';
 
-const server = jsonServer.create()
-const router = jsonServer.router('./test/db.json')
-server.use(router)
+const server = jsonServer.create();
+const router = jsonServer.router('./test/db.json');
+server.use(router);
 
 var httpServer: any;
 
@@ -14,7 +14,7 @@ describe('apitester', () => {
   });
 
   afterAll(() => {
-    httpServer?.close()
+    httpServer?.close();
   });
 
   it('should perform overall test actions and verifications', async () => {
