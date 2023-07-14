@@ -5,7 +5,7 @@
     "steps": [
         {
             "action": "get",
-            "inputData": "https://jsonplaceholder.typicode.com/todos/"
+            "inputData": "http://localhost:3000/todos/"
         },
         {
             "action": "pickAndVerify",

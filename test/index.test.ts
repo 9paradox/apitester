@@ -1,7 +1,22 @@
 import { apitester } from '../src/index';
 import { StepType } from '../src/types';
+import jsonServer from 'json-server';
+
+const server = jsonServer.create()
+const router = jsonServer.router('./test/db.json')
+server.use(router)
+
+var httpServer: any;
 
 describe('apitester', () => {
+  beforeAll(() => {
+    httpServer = server.listen(3000);
+  });
+
+  afterAll(() => {
+    httpServer?.close()
+  });
+
   it('should perform overall test actions and verifications', async () => {
     const test = apitester.createTestCase({
       dataFilePath: './test/test-data.json',
@@ -14,13 +29,13 @@ describe('apitester', () => {
 
     const testResult = await test
       .axios({
-        url: 'https://jsonplaceholder.typicode.com/todos/',
+        url: 'http://localhost:3000/todos/',
         method: 'GET',
       })
       .pickAndVerify({ query: 'status', expected: 200, toBe: '==' })
       .pickStep(1)
       .pickData('@jsonata data[0].{"id": id}')
-      .formatData('https://jsonplaceholder.typicode.com/todos/<%= it.id %>')
+      .formatData('http://localhost:3000/todos/<%= it.id %>')
       .get()
       .log()
       .pickStep(6)

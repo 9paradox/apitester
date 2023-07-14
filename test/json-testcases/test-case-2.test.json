@@ -5,7 +5,7 @@
     "steps": [
         {
             "action": "get",
-            "inputData": "https://jsonplaceholder.typicode.com/todos/"
+            "inputData": "http://localhost:3000/todos/"
         },
         {
             "action": "pickAndVerify",
@@ -25,7 +25,7 @@
         },
         {
             "action": "formatData",
-            "inputData": "https://jsonplaceholder.typicode.com/todos/<%= it.id %>"
+            "inputData": "http://localhost:3000/todos/<%= it.id %>"
         },
         {
             "action": "get",
