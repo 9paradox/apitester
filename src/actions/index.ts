@@ -5,6 +5,7 @@ import {
   StepOptions,
   StepType,
   TestCaseResult,
+  TestRunner,
 } from '../types';
 import { AxiosOptions } from './axiosReq';
 import { FormatTemplateOptions } from './formatTemplate';
@@ -29,6 +30,7 @@ export interface IActions {
   getStep(index: number): Step;
   data(key: string): any;
   test(): Promise<TestCaseResult>;
+  testWith(testRunner: TestRunner): void;
 }
 
 export type ActionName = keyof IActions | 'TEST_CASE';
