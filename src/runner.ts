@@ -1,6 +1,6 @@
 import { TestRunner } from './types';
-import { TestCase } from './testcase';
 import JestHelper from './utils/jestHelper';
+import { TestCase } from './testcase';
 
 const runner = (testCase: TestCase, testRunner: TestRunner) => {
   switch (testRunner) {

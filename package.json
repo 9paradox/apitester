@@ -75,6 +75,7 @@
   "dependencies": {
     "axios": "^0.27.2",
     "eta": "^1.12.3",
+    "jest": "^27.5.1",
     "jmespath": "^0.16.0",
     "jsonata": "^1.8.6"
   },
