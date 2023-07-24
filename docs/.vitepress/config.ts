@@ -23,6 +23,10 @@ export default defineConfig({
             link: '/docs/introduction/what-is-apitester',
           },
           { text: 'Getting started', link: '/docs/introduction/get-started' },
+          {
+            text: 'Setting up Testcases',
+            link: '/docs/introduction/setting-up-testcases',
+          },
         ],
       },
       {

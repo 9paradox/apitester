@@ -54,7 +54,7 @@ Now, let's create a folder to hold our test files. By convention, Jest looks for
 
 2. Create your first test file inside the test folder. Let's call it `hello.test.js`:
 
-   ```javascript
+   ```javascript:line-numbers {1}
    //__test__/hello.test.js
    const { apitester } = require('@9paradox/apitester');
 
@@ -96,7 +96,7 @@ To run your tests conveniently, add a test script to your `package.json` file by
 }
 ```
 
-## Running the tests
+## 6. Running the tests
 
 You are now all set to run your tests. To execute the test suite, simply run:
 
@@ -121,3 +121,7 @@ Ran all test suites.
 ```
 
 Congratulations! You have successfully set up a new Node.js project with apitester and Jest for API testing. You can now write more test cases and expand your test suite to ensure the reliability and correctness of your api. Happy testing!
+
+## What's Next?
+
+Learn how to setup your testing project, as apitester provides different ways to test your testcases. You can continue with writing testcases in javacript/typescript or you can define steps in json files.
