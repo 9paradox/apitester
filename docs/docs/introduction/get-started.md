@@ -104,6 +104,20 @@ You are now all set to run your tests. To execute the test suite, simply run:
 npm test
 ```
 
-Jest will automatically discover and execute the test files inside the `__tests__` directory.
+Jest will automatically discover and execute the test files inside the `__tests__` directory and your test output will be something like:
+
+```bash
+> my-api-testing-project@1.0.0 test
+> jest
+
+ PASS  __tests__/hello.test.js
+  √ verify todos endpoint returns status 200 (248 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        1.231 s
+Ran all test suites.
+```
 
 Congratulations! You have successfully set up a new Node.js project with apitester and Jest for API testing. You can now write more test cases and expand your test suite to ensure the reliability and correctness of your api. Happy testing!
