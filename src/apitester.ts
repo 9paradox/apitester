@@ -1,6 +1,12 @@
 import { IActions } from './actions';
+import runner from './runner';
 import { TestCase } from './testcase';
-import { MultiTestCaseResult, TestCaseOptions, TestCaseResult } from './types';
+import {
+  MultiTestCaseResult,
+  TestCaseOptions,
+  TestCaseResult,
+  TestRunner,
+} from './types';
 import Helper from './utils/helpers';
 
 interface ApiTester {
@@ -8,6 +14,7 @@ interface ApiTester {
   createTestCaseFromJsonFile: (testCasePath: string) => IActions;
   getJsonTestCasesFromFolder: (folderPath: string) => IActions[];
   runTestCases: (testCases: IActions[]) => Promise<MultiTestCaseResult>;
+  testJsonTestCasesWith: (folderPath: string, testRunner?: TestRunner) => void;
 }
 
 export const apitester: ApiTester = {
@@ -18,15 +25,7 @@ export const apitester: ApiTester = {
     return new TestCase(Helper.buildTestCaseOptionsFromFile(testCasePath));
   },
   getJsonTestCasesFromFolder(folderPath: string) {
-    const testCaseFiles = Helper.getTestCasesFromFolder(folderPath);
-    var testCases: IActions[] = [];
-    for (const testCaseFile of testCaseFiles) {
-      const testCaseOptions = Helper.buildTestCaseOptionsFromFile(
-        Helper.joinPaths(folderPath, testCaseFile)
-      );
-      testCases.push(new TestCase(testCaseOptions));
-    }
-    return testCases;
+    return buildJsonTestCasesFromFolder(folderPath);
   },
   runTestCases: function (testCases: IActions[]): Promise<MultiTestCaseResult> {
     return new Promise(async (resolve, reject) => {
@@ -49,30 +48,54 @@ export const apitester: ApiTester = {
       resolve(multiTestCaseResult);
     });
   },
+  testJsonTestCasesWith(folderPath: string, testRunner: TestRunner = 'jest') {
+    buildJsonTestCasesFromFolder(folderPath).forEach((testCase) => {
+      runner(testCase, testRunner);
+    });
+  },
 };
+
+function buildJsonTestCasesFromFolder(folderPath: string): TestCase[] {
+  var testCases: TestCase[] = [];
+  const testCaseFiles = Helper.getTestCasesFromFolder(folderPath);
+  for (const testCaseFile of testCaseFiles) {
+    const testCaseOptions = Helper.buildTestCaseOptionsFromFile(
+      Helper.joinPaths(folderPath, testCaseFile)
+    );
+    testCases.push(new TestCase(testCaseOptions));
+  }
+  return testCases;
+}
 
 async function runTestCase(testCase: IActions): Promise<TestCaseResult> {
   try {
     const result = await testCase.test();
     return result;
   } catch (err: any) {
-    const exception = JSON.stringify(err);
-    return {
-      success: false,
-      error: {
-        title: testCase.getStep(0).inputData,
-        type: 'exception',
-        exception: exception,
-        message: err.message,
-      },
-      executedSteps: 0,
-      executedVerificationSteps: 0,
-      lastExecutedStep: 0,
-      lastVerificationStep: 0,
-      totalSteps: 0,
-      totalSuccessfulVerificationSteps: 0,
-      totalVerificationSteps: 0,
-      steps: [],
-    };
+    return buildExceptionTestCase(err, testCase.getStep(0).inputData);
   }
+}
+
+function buildExceptionTestCase(
+  err: any,
+  testCaseTitle: string
+): TestCaseResult {
+  const exception = JSON.stringify(err);
+  return {
+    success: false,
+    error: {
+      title: testCaseTitle,
+      type: 'exception',
+      exception: exception,
+      message: err.message,
+    },
+    executedSteps: 0,
+    executedVerificationSteps: 0,
+    lastExecutedStep: 0,
+    lastVerificationStep: 0,
+    totalSteps: 0,
+    totalSuccessfulVerificationSteps: 0,
+    totalVerificationSteps: 0,
+    steps: [],
+  };
 }

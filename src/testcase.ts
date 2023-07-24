@@ -11,6 +11,7 @@ import {
   StepOptions,
   CallbackData,
   CustomFunction,
+  TestRunner,
 } from './types';
 import { FormatTemplateOptions } from './actions/formatTemplate';
 import { VerifyOptions } from './actions/verify';
@@ -20,6 +21,7 @@ import { GetOptions } from './actions/get';
 import { logStepToFile } from './actions/logStepToFile';
 import { AxiosOptions } from './actions/axiosReq';
 import { PostOptions } from './actions/post';
+import runner from './runner';
 
 export class TestCase {
   steps: Step[];
@@ -71,7 +73,7 @@ export class TestCase {
     }
   }
 
-  addSteps(steps: StepOptions[]): TestCase {
+  private addSteps(steps: StepOptions[]): TestCase {
     steps.forEach((step) => {
       this.addStep(step);
     });
@@ -162,7 +164,12 @@ export class TestCase {
     return await this.testCaseRunner();
   }
 
-  async testCaseRunner(): Promise<TestCaseResult> {
+  testWith(testRunner: TestRunner = 'jest') {
+    //todo: move to global config
+    runner(this, testRunner);
+  }
+
+  private async testCaseRunner(): Promise<TestCaseResult> {
     const totalSteps = this.steps.length;
 
     const totalVerificationSteps = this.steps.filter(
@@ -189,7 +196,11 @@ export class TestCase {
         if (!shouldContinue) {
           testCaseResults.error = {
             type: 'error',
-            title: 'Error occurred on step: ' + index,
+            title:
+              'Error occurred on step: ' +
+              index +
+              ' - ' +
+              this.getStep(index).action,
             message: stepResult.message,
           };
         }
@@ -285,11 +296,11 @@ export class TestCase {
     return stepResult;
   }
 
-  stepCallback(data: CallbackData) {
+  private stepCallback(data: CallbackData) {
     if (this.options?.callback) this.options?.callback(data);
   }
 
-  recordStep(
+  private recordStep(
     action: ActionName,
     type: StepType,
     data: any,
@@ -306,22 +317,25 @@ export class TestCase {
     });
   }
 
-  validateIndexOrThrow(index: number) {
+  private validateIndexOrThrow(index: number) {
     if (index > this.steps.length || index < 0)
       throw new Error('Invalid index provided');
   }
 
-  setOutputData(index: number, data: any): void {
+  private setOutputData(index: number, data: any): void {
     this.validateIndexOrThrow(index);
     this.steps[index].outputData = data;
   }
 
-  setInputData(index: number, data: any): void {
+  private setInputData(index: number, data: any): void {
     this.validateIndexOrThrow(index);
     this.steps[index].inputData = data;
   }
 
-  setStepVerifiedStatus(index: number, verified: Optional<boolean>): void {
+  private setStepVerifiedStatus(
+    index: number,
+    verified: Optional<boolean>
+  ): void {
     this.validateIndexOrThrow(index);
     this.steps[index].verified = verified;
   }

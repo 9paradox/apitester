@@ -93,3 +93,5 @@ export type CustomFunction = (
   outputData: any;
   verification?: VerificationResult;
 };
+
+export type TestRunner = 'jest';

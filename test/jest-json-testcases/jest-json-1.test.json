@@ -1,0 +1,17 @@
+{
+  "title": "jest json testcase verify test endpoint",
+  "steps": [
+    {
+      "action": "get",
+      "inputData": "https://dummyjson.com/test"
+    },
+    {
+      "action": "pickAndVerify",
+      "inputData": {
+        "query": "@jsonata data.method",
+        "expected": "GET",
+        "toBe": "equal"
+      }
+    }
+  ]
+}

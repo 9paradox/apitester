@@ -1,6 +1,6 @@
 {
   "name": "@9paradox/apitester",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "license": "MIT",
   "author": "Akshay Gaonkar (9paradox)",
   "main": "dist/index.js",
@@ -10,6 +10,7 @@
     "type": "git",
     "url": "https://github.com/9paradox/apitester.git"
   },
+  "homepage": "https://9paradox.com/apitester",
   "keywords": [
     "apitester",
     "api-testing",
@@ -30,7 +31,12 @@
     "prepare": "dts build",
     "size": "size-limit",
     "start": "dts watch",
-    "test": "dts test --verbose"
+    "test": "dts test",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
+    "docs:predeploy": "npm run docs:build",
+    "docs:deploy": "gh-pages -d ./docs/.vitepress/dist"
   },
   "husky": {
     "hooks": {
@@ -66,15 +72,18 @@
     "@types/jmespath": "^0.15.0",
     "@types/json-server": "^0.14.4",
     "dts-cli": "^1.5.1",
+    "gh-pages": "^5.0.0",
     "husky": "^8.0.1",
     "json-server": "^0.17.3",
     "size-limit": "^7.0.8",
     "tslib": "^2.4.0",
-    "typescript": "^4.7.4"
+    "typescript": "^4.7.4",
+    "vitepress": "^1.0.0-beta.5"
   },
   "dependencies": {
     "axios": "^0.27.2",
     "eta": "^1.12.3",
+    "jest": "^27.5.1",
     "jmespath": "^0.16.0",
     "jsonata": "^1.8.6"
   },
