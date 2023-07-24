@@ -30,7 +30,10 @@
     "prepare": "dts build",
     "size": "size-limit",
     "start": "dts watch",
-    "test": "dts test"
+    "test": "dts test",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "husky": {
     "hooks": {
@@ -70,7 +73,8 @@
     "json-server": "^0.17.3",
     "size-limit": "^7.0.8",
     "tslib": "^2.4.0",
-    "typescript": "^4.7.4"
+    "typescript": "^4.7.4",
+    "vitepress": "^1.0.0-beta.5"
   },
   "dependencies": {
     "axios": "^0.27.2",
