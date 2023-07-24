@@ -2,6 +2,7 @@ import { defineConfig } from 'vitepress';
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+  base: '/apitester/',
   title: 'apitester - A simple rest api testing framework',
   description:
     'A simple rest api testing framework. Crafted with easy to use method call and method chaining, so you can write clean api testing automation scripts in javascript and typescript.',
