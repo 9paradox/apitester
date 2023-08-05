@@ -48,6 +48,8 @@ describe('apitester', () => {
         outputDataFormat: 'object',
       })
       .post()
+      .verifyTimeTaken({ expected: 1000, toBe: '>=', format: 'ms' })
+      .pickStep(14)
       .pickAndVerify({ query: 'status', expected: [200, 201], toBe: 'in' })
       .pickStep(13)
       .pickData('data.title')

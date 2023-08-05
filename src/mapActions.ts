@@ -10,6 +10,7 @@ import { post } from './actions/post';
 import { VerificationResult } from './actions/types';
 import { TestCase } from './testcase';
 import { axiosReq } from './actions/axiosReq';
+import { verifyTimeTaken } from './actions/verifyTimeTaken';
 
 export default async function performAction(
   testCase: TestCase,
@@ -71,6 +72,14 @@ export default async function performAction(
 
     case 'verify':
       outputData = await verify(lastStep.outputData, currentStep.inputData);
+      verification = outputData;
+      break;
+
+    case 'verifyTimeTaken':
+      outputData = await verifyTimeTaken(
+        lastStep.timeTaken,
+        currentStep.inputData
+      );
       verification = outputData;
       break;
 

@@ -53,7 +53,7 @@ function getTimeSpan(startDateTime: string, endDateTime: string) {
   const end = new Date(endDateTime).getTime();
 
   const diff = end - start;
-  const seconds = Math.floor((diff / 1000) % 60);
+  const seconds = (diff / 1000) % 60;
   return { ms: diff, s: seconds };
 }
 

@@ -13,6 +13,7 @@ import { GetOptions } from './get';
 import { PickAndVerifyOptions } from './pickDataAndVerify';
 import { PostOptions } from './post';
 import { VerifyOptions } from './verify';
+import { VerifyTimeTakenOptions } from './verifyTimeTaken';
 
 export interface IActions {
   get(options?: GetOptions): TestCase;
@@ -23,6 +24,7 @@ export interface IActions {
   formatTemplate(options: FormatTemplateOptions): TestCase;
   pickAndVerify(options: PickAndVerifyOptions): TestCase;
   verify(option: VerifyOptions): TestCase;
+  verifyTimeTaken(option: VerifyTimeTakenOptions): TestCase;
   pickStep(index: number): TestCase;
   addStep(options: StepOptions): TestCase;
   custom(stepType: StepType, fn: CustomFunction): TestCase;

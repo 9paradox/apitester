@@ -22,6 +22,7 @@ import { logStepToFile } from './actions/logStepToFile';
 import { AxiosOptions } from './actions/axiosReq';
 import { PostOptions } from './actions/post';
 import runner from './runner';
+import { VerifyTimeTakenOptions } from './actions/verifyTimeTaken';
 
 export class TestCase {
   steps: Step[];
@@ -94,6 +95,11 @@ export class TestCase {
 
   verify(option: VerifyOptions): TestCase {
     this.recordStep('verify', StepType.Verification, option);
+    return this;
+  }
+
+  verifyTimeTaken(option: VerifyTimeTakenOptions): TestCase {
+    this.recordStep('verifyTimeTaken', StepType.Verification, option);
     return this;
   }
 
