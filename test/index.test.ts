@@ -64,6 +64,26 @@ describe('apitester', () => {
         };
       })
       .verify('DELECTUS AUT AUTEM')
+      .buildData({
+        queries: [
+          {
+            step: 1,
+            query: 'data[0].id',
+            name: 'step1Id',
+          },
+          {
+            step: 6,
+            query: 'data.title',
+            name: 'step6Title',
+          }
+        ]
+      })
+      .verify({
+        expected: {
+          step1Id: 1,
+          step6Title: 'delectus aut autem',
+        }
+      })
       .test();
 
     if (!testResult.success) {

@@ -11,6 +11,7 @@ import { VerificationResult } from './actions/types';
 import { TestCase } from './testcase';
 import { axiosReq } from './actions/axiosReq';
 import { verifyTimeTaken } from './actions/verifyTimeTaken';
+import { BuildDataOptions, buildData } from './actions/buildData';
 
 export default async function performAction(
   testCase: TestCase,
@@ -52,6 +53,13 @@ export default async function performAction(
         lastStep.outputData,
         currentStep.inputData
       );
+      break;
+
+    case 'buildData':
+      const buildDataOptions = currentStep.inputData as BuildDataOptions;
+      const stepNumbers = buildDataOptions.queries.map((q) => q.step);
+      const data = testCase.getStepsData(stepNumbers);
+      outputData = await buildData(data, currentStep.inputData);
       break;
 
     case 'formatData':

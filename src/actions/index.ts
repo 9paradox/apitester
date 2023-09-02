@@ -8,6 +8,7 @@ import {
   TestRunner,
 } from '../types';
 import { AxiosOptions } from './axiosReq';
+import { BuildDataOptions } from './buildData';
 import { FormatTemplateOptions } from './formatTemplate';
 import { GetOptions } from './get';
 import { PickAndVerifyOptions } from './pickDataAndVerify';
@@ -20,6 +21,7 @@ export interface IActions {
   post(options?: PostOptions): TestCase;
   axios(options: AxiosOptions): TestCase;
   pickData(query: string): TestCase;
+  buildData(option: BuildDataOptions): TestCase;
   formatData(templateData: string): TestCase;
   formatTemplate(options: FormatTemplateOptions): TestCase;
   pickAndVerify(options: PickAndVerifyOptions): TestCase;

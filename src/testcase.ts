@@ -23,6 +23,7 @@ import { AxiosOptions } from './actions/axiosReq';
 import { PostOptions } from './actions/post';
 import runner from './runner';
 import { VerifyTimeTakenOptions } from './actions/verifyTimeTaken';
+import { BuildDataOptions } from './actions/buildData';
 
 export class TestCase {
   steps: Step[];
@@ -123,9 +124,22 @@ export class TestCase {
     return this;
   }
 
+  buildData(option: BuildDataOptions): TestCase {
+    this.recordStep('buildData', StepType.Action, option);
+    return this;
+  }
+
   getStep(index: number): Step {
     this.validateIndexOrThrow(index);
     return this.steps[index];
+  }
+
+  getStepsData(stepNumbers: number[]): any[] {
+    const stepsData: any[] = [];
+    for (const stepNumber of stepNumbers) {
+      stepsData.push(this.getStep(stepNumber).outputData ?? {});
+    }
+    return stepsData;
   }
 
   addStep(options: StepOptions): TestCase {
