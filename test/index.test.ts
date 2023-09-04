@@ -38,7 +38,7 @@ describe('apitester', () => {
       .formatData('http://localhost:3000/todos/<%= it.id %>')
       .get()
       .log()
-      .pickStep(6)
+      .pickStep(-2)
       .pickData('data.title')
       .verify('delectus aut autem')
       .addStep({ action: 'pickStep', inputData: 6 })
@@ -49,9 +49,9 @@ describe('apitester', () => {
       })
       .post()
       .verifyTimeTaken({ expected: 1000, toBe: '>=', format: 'ms' })
-      .pickStep(14)
+      .pickStep(-2)
       .pickAndVerify({ query: 'status', expected: [200, 201], toBe: 'in' })
-      .pickStep(13)
+      .pickStep(-5)
       .pickData('data.title')
       .custom(StepType.Action, (testCase, currentStep, lastStep) => {
         var output = test.data('delectus_aut_autem');
@@ -75,14 +75,14 @@ describe('apitester', () => {
             step: 6,
             query: 'data.title',
             name: 'step6Title',
-          }
-        ]
+          },
+        ],
       })
       .verify({
         expected: {
           step1Id: 1,
           step6Title: 'delectus aut autem',
-        }
+        },
       })
       .test();
 

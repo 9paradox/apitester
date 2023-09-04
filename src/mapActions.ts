@@ -75,7 +75,10 @@ export default async function performAction(
       break;
 
     case 'pickStep':
-      outputData = testCase.getStep(currentStep.inputData).outputData;
+      outputData = testCase.getStep(
+        currentStep.inputData,
+        currentStep.index
+      ).outputData;
       break;
 
     case 'verify':

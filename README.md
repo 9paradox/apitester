@@ -164,10 +164,9 @@ if (!multiTestCaseResult.success) {
 
 Now easily create testcases with the online drag-and-drop tool - [apitester-creator](https://9paradox.com/apitester-creator/).
 
-![Alt text](https://raw.githubusercontent.com/9paradox/apitester-creator/main/screenshot.png "try-jmespath screenshot")
+![Alt text](https://raw.githubusercontent.com/9paradox/apitester-creator/main/screenshot.png 'try-jmespath screenshot')
 
 Export json testcases and run them using `apitester.getJsonTestCasesFromFolder(..)` and `apitester.runTestCases(..)`.
-
 
 ## Action/Step methods
 
@@ -183,7 +182,7 @@ Once a new testcase is created, we can perform multiple steps/actions and finall
 | `formatTemplate`    | `FormatTemplateOptions`         | `TestCase`  | Render template file based on input data from last step using [Eta.js](https://eta.js.org/).   |
 | `pickAndVerify`     | `PickAndVerifyOptions`          | `TestCase`  | Perform json query to pick data from last step and do a test assert.                           |
 | `verify`            | `VerifyOptions`                 | `TestCase`  | To assert data from last step.                                                                 |
-| `pickStep`          | `number`                        | `TestCase`  | To pick output data from specific step.                                                        |
+| `pickStep`          | `number`                        | `TestCase`  | To pick output data from specific step. Also supports negative index from current step.        |
 | `addStep`           | `StepOptions`                   | `TestCase`  | Add a steps from JSON object.                                                                  |
 | `custom`            | `StepType` and `CustomFunction` | `TestCase`  | Run custom function as a step.                                                                 |
 | `log`               | -                               | `TestCase`  | Last steps will be logged to a file.                                                           |

@@ -129,9 +129,13 @@ export class TestCase {
     return this;
   }
 
-  getStep(index: number): Step {
-    this.validateIndexOrThrow(index);
-    return this.steps[index];
+  getStep(index: number, currentStepIndex: number = 0): Step {
+    var stepIndex = index;
+    if (index < 0 && currentStepIndex > 1) {
+      stepIndex = currentStepIndex + index;
+    }
+    this.validateIndexOrThrow(stepIndex);
+    return this.steps[stepIndex];
   }
 
   getStepsData(stepNumbers: number[]): any[] {
