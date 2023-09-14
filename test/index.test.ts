@@ -53,7 +53,7 @@ describe('apitester', () => {
       .pickAndVerify({ query: 'status', expected: [200, 201], toBe: 'in' })
       .pickStep(-5)
       .pickData('data.title')
-      .custom(StepType.Action, (testCase, currentStep, lastStep) => {
+      .custom(StepType.Action, async (testCase, currentStep, lastStep) => {
         var output = test.data('delectus_aut_autem');
         if (lastStep.outputData == output) {
           output = (output as string).toUpperCase();
@@ -84,6 +84,12 @@ describe('apitester', () => {
           step6Title: 'delectus aut autem',
         },
       })
+      .customFrom({
+        stepType: StepType.Action,
+        filePath: './test/customFunctions/my_test_function.js',
+        functionName: 'customFunction',
+      })
+      .verify('DELECTUS AUT AUTEM')
       .test();
 
     if (!testResult.success) {

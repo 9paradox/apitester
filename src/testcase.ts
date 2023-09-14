@@ -24,6 +24,7 @@ import { PostOptions } from './actions/post';
 import runner from './runner';
 import { VerifyTimeTakenOptions } from './actions/verifyTimeTaken';
 import { BuildDataOptions } from './actions/buildData';
+import { CustomFromOptions } from './actions/customFrom';
 
 export class TestCase {
   steps: Step[];
@@ -181,6 +182,11 @@ export class TestCase {
 
   custom(stepType: StepType, fn: CustomFunction): TestCase {
     this.recordStep('custom', stepType, fn);
+    return this;
+  }
+
+  customFrom(options: CustomFromOptions): TestCase {
+    this.recordStep('customFrom', options.stepType, options);
     return this;
   }
 

@@ -89,14 +89,16 @@ export interface StepOptions {
   inputData: any;
 }
 
+export interface CustomFromReturn {
+  inputData: any;
+  outputData: any;
+  verification?: VerificationResult;
+}
+
 export type CustomFunction = (
   testCase: TestCase,
   currentStep: Step,
   lastStep: Step
-) => {
-  inputData: any;
-  outputData: any;
-  verification?: VerificationResult;
-};
+) => Promise<CustomFromReturn>;
 
 export type TestRunner = 'jest';

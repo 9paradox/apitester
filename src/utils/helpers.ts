@@ -85,6 +85,11 @@ function getTestCasesFromFolder(folderPath: string) {
   return testCases;
 }
 
+async function resolve(filePath: string) {
+  const absolutePath = path.resolve(filePath);
+  return await import(absolutePath);
+}
+
 const Helper = {
   fileExists,
   readFile,
@@ -96,6 +101,7 @@ const Helper = {
   createFolder,
   buildTestCaseOptionsFromFile,
   getTestCasesFromFolder,
+  resolve,
 };
 
 export default Helper;

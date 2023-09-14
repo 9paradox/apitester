@@ -9,6 +9,7 @@ import {
 } from '../types';
 import { AxiosOptions } from './axiosReq';
 import { BuildDataOptions } from './buildData';
+import { CustomFromOptions } from './customFrom';
 import { FormatTemplateOptions } from './formatTemplate';
 import { GetOptions } from './get';
 import { PickAndVerifyOptions } from './pickDataAndVerify';
@@ -30,6 +31,7 @@ export interface IActions {
   pickStep(index: number): TestCase;
   addStep(options: StepOptions): TestCase;
   custom(stepType: StepType, fn: CustomFunction): TestCase;
+  customFrom(options: CustomFromOptions): TestCase;
   log(): TestCase;
   getStep(index: number): Step;
   data(key: string): any;
