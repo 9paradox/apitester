@@ -178,13 +178,16 @@ Once a new testcase is created, we can perform multiple steps/actions and finall
 | `post`              | `PostOptions`                   | `TestCase`  | Perform `POST` http request.                                                                   |
 | `axios`             | `AxiosOptions`                  | `TestCase`  | Perform http request based on [AxiosRequestConfig](https://github.com/axios/axios#axios-api).  |
 | `pickData`          | `string`                        | `TestCase`  | Perform json query to pick data from last step.                                                |
+| `buildData`         | `BuildDataOptions`              | `TestCase`  | Build and merge your data from different steps using json query.                               |
 | `formatData`        | `string`                        | `TestCase`  | Render string template based on input data from last step using [Eta.js](https://eta.js.org/). |
 | `formatTemplate`    | `FormatTemplateOptions`         | `TestCase`  | Render template file based on input data from last step using [Eta.js](https://eta.js.org/).   |
 | `pickAndVerify`     | `PickAndVerifyOptions`          | `TestCase`  | Perform json query to pick data from last step and do a test assert.                           |
 | `verify`            | `VerifyOptions`                 | `TestCase`  | To assert data from last step.                                                                 |
+| `verifyTimeTaken`   | `VerifyTimeTakenOptions`        | `TestCase`  | To assert time taken for last step.                                                            |
 | `pickStep`          | `number`                        | `TestCase`  | To pick output data from specific step. Also supports negative index from current step.        |
 | `addStep`           | `StepOptions`                   | `TestCase`  | Add a steps from JSON object.                                                                  |
 | `custom`            | `StepType` and `CustomFunction` | `TestCase`  | Run custom function as a step.                                                                 |
+| `customFrom`        | `CustomFromOptions`             | `TestCase`  | Run custom function from a file a step.                                                        |
 | `log`               | -                               | `TestCase`  | Last steps will be logged to a file.                                                           |
 | `getStep`           | `number`                        | `Step`      | Returns the specific step with its input and output data.                                      |
 
@@ -229,6 +232,22 @@ Create PostOptions using one of the following type.
 | `AxiosRequestConfig` | [Axios Request config object](https://github.com/axios/axios#axios-api). |
 | `undefined`          | To pick `SimplePostConfig` from last step.                               |
 
+#### BuildDataOptions
+
+Query data form different steps and merge into one object.
+
+| Parameter | Type          | Required | Description                                         |
+| :-------- | :------------ | :------- | :-------------------------------------------------- |
+| `queries` | `QueryData[]` | `yes`    | Array of queries to merge data from multiple steps. |
+
+#### QueryData
+
+| Parameter | Type     | Required | Description                           |
+| :-------- | :------- | :------- | :------------------------------------ |
+| `step`    | `number` | `yes`    | Step number to perform json query on. |
+| `query`   | `string` | `yes`    | Json query.                           |
+| `name`    | `string` | `yes`    | Field name to store value into.       |
+
 #### FormatTemplateOptions
 
 Create FormatTemplateOptions using one of the following type.
@@ -247,7 +266,7 @@ Perform json query to pick data from last step and verify the data against expec
 | :--------- | :------- | :------- | :------------------------- |
 | `query`    | `string` | `yes`    | Query string to pick data. |
 | `expected` | `any`    | `yes`    | Expected data.             |
-| `toBe`     | `ToBe`   | `no`     | Type of step.              |
+| `toBe`     | `ToBe`   | `no`     | Comparison type.           |
 
 #### ToBe
 
@@ -264,19 +283,57 @@ Create VerifyOptions using one of the following type.
 | `string`                                                 | string data.                 |
 | {`'expected'` : `any`, `'toBe'` : `ToBe` or `undefined`} | Expected data to be verified |
 
+#### VerifyTimeTakenOptions
+
+Verify time taken by last step.
+
+| Parameter  | Type        | Required | Description                                                                   |
+| :--------- | :---------- | :------- | :---------------------------------------------------------------------------- |
+| `expected` | `number`    | `yes`    | Expected time.                                                                |
+| `format`   | `ms` or `s` | `yes`    | Compare expected time against ms (microseconds) or s (seconds) of actual time |
+| `toBe`     | `ToBe`      | `yes`    | Comparison type.                                                              |
+
 #### CustomFunction
 
 User provided function to run as a step.
 
 ```javascript
 //custom function input parameter and return type structure
-myFunction = (testCase: TestCase, currentStep: Step, lastStep: Step) => {
+myFunction = async (testCase: TestCase, currentStep: Step, lastStep: Step) => {
 	return {
 		inputData: any;
 		outputData: any;
 		verification?: VerificationResult; //required when the step is Verification type
 	}
 }
+```
+
+#### CustomFromOptions
+
+User provided function from a external file to run as a step. The user function should follow CustomFunction definition.
+
+| Parameter      | Type       | Required | Description                                           |
+| :------------- | :--------- | :------- | :---------------------------------------------------- |
+| `stepType`     | `StepType` | `yes`    | Type of step.                                         |
+| `filePath`     | `string`   | `yes`    | Filepath of the javascript file.                      |
+| `functionName` | `string`   | `yes`    | Name of the function which is exported from the file. |
+
+An example of a custom function from a external javascript file.
+
+```javascript
+//function should follow CustomFunction structure.
+async function myCustomFunction(testCase, currentStep, lastStep) {
+  var output = testCase.data('delectus_aut_autem');
+  output = output.toUpperCase();
+  var result = {
+    inputData: lastStep.outputData,
+    outputData: output,
+  };
+  return result;
+}
+
+//should follow exporting the functionName
+module.exports.myCustomFunction = myCustomFunction;
 ```
 
 #### StepType
