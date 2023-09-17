@@ -10,6 +10,11 @@ export enum StepType {
 
 export type Optional<T> = T | undefined;
 
+export interface StepTime {
+  ms: number;
+  s: number;
+}
+
 export interface Step {
   index: number;
   type: StepType;
@@ -20,7 +25,7 @@ export interface Step {
   verified: Optional<boolean>;
   startedAt?: string;
   endedAt?: string;
-  timeTaken?: { ms: number; s: number };
+  timeTaken?: StepTime;
 }
 
 interface Error {
@@ -84,14 +89,16 @@ export interface StepOptions {
   inputData: any;
 }
 
+export interface CustomFromReturn {
+  inputData: any;
+  outputData: any;
+  verification?: VerificationResult;
+}
+
 export type CustomFunction = (
   testCase: TestCase,
   currentStep: Step,
   lastStep: Step
-) => {
-  inputData: any;
-  outputData: any;
-  verification?: VerificationResult;
-};
+) => Promise<CustomFromReturn>;
 
 export type TestRunner = 'jest';

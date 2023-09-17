@@ -38,7 +38,7 @@ describe('apitester', () => {
       .formatData('http://localhost:3000/todos/<%= it.id %>')
       .get()
       .log()
-      .pickStep(6)
+      .pickStep(-2)
       .pickData('data.title')
       .verify('delectus aut autem')
       .addStep({ action: 'pickStep', inputData: 6 })
@@ -48,10 +48,12 @@ describe('apitester', () => {
         outputDataFormat: 'object',
       })
       .post()
+      .verifyTimeTaken({ expected: 1000, toBe: '>=', format: 'ms' })
+      .pickStep(-2)
       .pickAndVerify({ query: 'status', expected: [200, 201], toBe: 'in' })
-      .pickStep(13)
+      .pickStep(-5)
       .pickData('data.title')
-      .custom(StepType.Action, (testCase, currentStep, lastStep) => {
+      .custom(StepType.Action, async (testCase, currentStep, lastStep) => {
         var output = test.data('delectus_aut_autem');
         if (lastStep.outputData == output) {
           output = (output as string).toUpperCase();
@@ -60,6 +62,32 @@ describe('apitester', () => {
           inputData: lastStep.outputData,
           outputData: output,
         };
+      })
+      .verify('DELECTUS AUT AUTEM')
+      .buildData({
+        queries: [
+          {
+            step: 1,
+            query: 'data[0].id',
+            name: 'step1Id',
+          },
+          {
+            step: 6,
+            query: 'data.title',
+            name: 'step6Title',
+          },
+        ],
+      })
+      .verify({
+        expected: {
+          step1Id: 1,
+          step6Title: 'delectus aut autem',
+        },
+      })
+      .customFrom({
+        stepType: StepType.Action,
+        filePath: './test/customFunctions/my_test_function.js',
+        functionName: 'customFunction',
       })
       .verify('DELECTUS AUT AUTEM')
       .test();

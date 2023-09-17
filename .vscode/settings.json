@@ -1,5 +1,6 @@
 {
-    "cSpell.words": [
-        "apitester"
-    ]
+  "cSpell.words": ["apitester"],
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }

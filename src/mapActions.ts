@@ -4,12 +4,15 @@ import { pickDataAndVerify } from './actions/pickDataAndVerify';
 import { formatTemplate } from './actions/formatTemplate';
 import { formatData } from './actions/formatData';
 import { pickJsonData } from './actions/pickJsonData';
-import { Step, Optional } from './types';
+import { Step, Optional, CustomFunction } from './types';
 import { get } from './actions/get';
 import { post } from './actions/post';
 import { VerificationResult } from './actions/types';
 import { TestCase } from './testcase';
 import { axiosReq } from './actions/axiosReq';
+import { verifyTimeTaken } from './actions/verifyTimeTaken';
+import { BuildDataOptions, buildData } from './actions/buildData';
+import { customFrom } from './actions/customFrom';
 
 export default async function performAction(
   testCase: TestCase,
@@ -53,6 +56,13 @@ export default async function performAction(
       );
       break;
 
+    case 'buildData':
+      const buildDataOptions = currentStep.inputData as BuildDataOptions;
+      const stepNumbers = buildDataOptions.queries.map((q) => q.step);
+      const data = testCase.getStepsData(stepNumbers);
+      outputData = await buildData(data, currentStep.inputData);
+      break;
+
     case 'formatData':
       outputData = await formatData(currentStep.inputData, lastStep.outputData);
       break;
@@ -66,11 +76,22 @@ export default async function performAction(
       break;
 
     case 'pickStep':
-      outputData = testCase.getStep(currentStep.inputData).outputData;
+      outputData = testCase.getStep(
+        currentStep.inputData,
+        currentStep.index
+      ).outputData;
       break;
 
     case 'verify':
       outputData = await verify(lastStep.outputData, currentStep.inputData);
+      verification = outputData;
+      break;
+
+    case 'verifyTimeTaken':
+      outputData = await verifyTimeTaken(
+        lastStep.timeTaken,
+        currentStep.inputData
+      );
       verification = outputData;
       break;
 
@@ -86,7 +107,7 @@ export default async function performAction(
       break;
 
     case 'custom':
-      const customFnResult = currentStep.inputData(
+      const customFnResult = await (currentStep.inputData as CustomFunction)(
         testCase,
         currentStep,
         lastStep
@@ -94,6 +115,20 @@ export default async function performAction(
       inputData = customFnResult.inputData;
       outputData = customFnResult.outputData;
       verification = customFnResult.verification;
+      break;
+
+    case 'customFrom':
+      const customFromFn: CustomFunction = await customFrom(
+        currentStep.inputData
+      );
+      const customFnFromResult = await customFromFn(
+        testCase,
+        currentStep,
+        lastStep
+      );
+      inputData = customFnFromResult.inputData;
+      outputData = customFnFromResult.outputData;
+      verification = customFnFromResult.verification;
       break;
 
     default:

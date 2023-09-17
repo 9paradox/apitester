@@ -22,6 +22,9 @@ import { logStepToFile } from './actions/logStepToFile';
 import { AxiosOptions } from './actions/axiosReq';
 import { PostOptions } from './actions/post';
 import runner from './runner';
+import { VerifyTimeTakenOptions } from './actions/verifyTimeTaken';
+import { BuildDataOptions } from './actions/buildData';
+import { CustomFromOptions } from './actions/customFrom';
 
 export class TestCase {
   steps: Step[];
@@ -97,6 +100,11 @@ export class TestCase {
     return this;
   }
 
+  verifyTimeTaken(option: VerifyTimeTakenOptions): TestCase {
+    this.recordStep('verifyTimeTaken', StepType.Verification, option);
+    return this;
+  }
+
   pickStep(index: number): TestCase {
     this.recordStep('pickStep', StepType.Action, index);
     return this;
@@ -117,9 +125,26 @@ export class TestCase {
     return this;
   }
 
-  getStep(index: number): Step {
-    this.validateIndexOrThrow(index);
-    return this.steps[index];
+  buildData(option: BuildDataOptions): TestCase {
+    this.recordStep('buildData', StepType.Action, option);
+    return this;
+  }
+
+  getStep(index: number, currentStepIndex: number = 0): Step {
+    var stepIndex = index;
+    if (index < 0 && currentStepIndex > 1) {
+      stepIndex = currentStepIndex + index;
+    }
+    this.validateIndexOrThrow(stepIndex);
+    return this.steps[stepIndex];
+  }
+
+  getStepsData(stepNumbers: number[]): any[] {
+    const stepsData: any[] = [];
+    for (const stepNumber of stepNumbers) {
+      stepsData.push(this.getStep(stepNumber).outputData ?? {});
+    }
+    return stepsData;
   }
 
   addStep(options: StepOptions): TestCase {
@@ -157,6 +182,11 @@ export class TestCase {
 
   custom(stepType: StepType, fn: CustomFunction): TestCase {
     this.recordStep('custom', stepType, fn);
+    return this;
+  }
+
+  customFrom(options: CustomFromOptions): TestCase {
+    this.recordStep('customFrom', options.stepType, options);
     return this;
   }
 
