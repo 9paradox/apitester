@@ -194,7 +194,7 @@ export class TestCase {
     return await this.testCaseRunner();
   }
 
-  testWith(testRunner: TestRunner = 'jest') {
+  testWith(testRunner: TestRunner) {
     //todo: move to global config
     runner(this, testRunner);
   }

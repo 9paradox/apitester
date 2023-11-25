@@ -1,6 +1,6 @@
 {
   "name": "@9paradox/apitester",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "author": "Akshay Gaonkar (9paradox)",
   "main": "dist/index.js",
@@ -84,7 +84,6 @@
   "dependencies": {
     "axios": "^0.27.2",
     "eta": "^1.12.3",
-    "jest": "^27.5.1",
     "jmespath": "^0.16.0",
     "jsonata": "^1.8.6"
   },

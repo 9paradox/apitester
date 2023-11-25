@@ -14,7 +14,7 @@ interface ApiTester {
   createTestCaseFromJsonFile: (testCasePath: string) => IActions;
   getJsonTestCasesFromFolder: (folderPath: string) => IActions[];
   runTestCases: (testCases: IActions[]) => Promise<MultiTestCaseResult>;
-  testJsonTestCasesWith: (folderPath: string, testRunner?: TestRunner) => void;
+  testJsonTestCasesWith: (folderPath: string, testRunner: TestRunner) => void;
 }
 
 export const apitester: ApiTester = {
@@ -48,7 +48,7 @@ export const apitester: ApiTester = {
       resolve(multiTestCaseResult);
     });
   },
-  testJsonTestCasesWith(folderPath: string, testRunner: TestRunner = 'jest') {
+  testJsonTestCasesWith(folderPath: string, testRunner: TestRunner) {
     buildJsonTestCasesFromFolder(folderPath).forEach((testCase) => {
       runner(testCase, testRunner);
     });

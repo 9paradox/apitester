@@ -101,4 +101,8 @@ export type CustomFunction = (
   lastStep: Step
 ) => Promise<CustomFromReturn>;
 
-export type TestRunner = 'jest';
+export interface TestRunner {
+  name: 'jest';
+  expectFunction: any;
+  testFunction: any;
+}

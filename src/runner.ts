@@ -3,9 +3,9 @@ import JestHelper from './utils/jestHelper';
 import { TestCase } from './testcase';
 
 const runner = (testCase: TestCase, testRunner: TestRunner) => {
-  switch (testRunner) {
+  switch (testRunner.name) {
     case 'jest':
-      JestHelper.test(testCase);
+      JestHelper.test(testRunner, testCase);
   }
 };
 
