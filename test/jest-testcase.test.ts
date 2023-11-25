@@ -1,4 +1,5 @@
 import { apitester } from '../src/index';
+import { expect, test as jestTest } from '@jest/globals';
 
 apitester
   .createTestCase({
@@ -9,4 +10,8 @@ apitester
     query: 'status',
     expected: 200,
   })
-  .testWith();
+  .testWith({
+    name: 'jest',
+    testFunction: jestTest,
+    expectFunction: expect,
+  });
