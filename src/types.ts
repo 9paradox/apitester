@@ -72,7 +72,7 @@ export interface TestCaseOptions {
   steps?: StepOptions[];
   logPath?: string;
   logEachStep?: boolean;
-  callback?: (data: CallbackData) => void;
+  callback?: (data: CallbackData) => Promise<void>;
 }
 
 export interface DataSource {

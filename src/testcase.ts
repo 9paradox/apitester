@@ -276,7 +276,7 @@ export class TestCase {
 
     currentStep.startedAt = new Date().toISOString();
 
-    this.stepCallback({
+    await this.stepCallback({
       type: 'before',
       step: currentStep,
     });
@@ -312,7 +312,7 @@ export class TestCase {
       }
     }
 
-    this.stepCallback({
+    await this.stepCallback({
       type: 'after',
       step: currentStep,
       stepResult: stepResult,
@@ -326,8 +326,8 @@ export class TestCase {
     return stepResult;
   }
 
-  private stepCallback(data: CallbackData) {
-    if (this.options?.callback) this.options?.callback(data);
+  private async stepCallback(data: CallbackData) {
+    if (this.options?.callback) await this.options?.callback(data);
   }
 
   private recordStep(
