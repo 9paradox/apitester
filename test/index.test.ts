@@ -22,7 +22,7 @@ describe('apitester', () => {
       dataFilePath: './test/test-data.json',
       logPath: './logs',
       logEachStep: true,
-      callback: (data) => {
+      callback: async (data) => {
         if (data.step.index == 1 && data.type == 'after') console.log(data);
       },
     });

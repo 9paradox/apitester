@@ -102,7 +102,7 @@ const testcase = apitester.createTestCase({...}: TestCaseOptions);
 | `steps`        | `StepOptions[]`                | `no`     | Add steps while creating testcase. Check [type reference](https://github.com/9paradox/apitester#type-reference). |
 | `logPath`      | `string`                       | `no`     | Logging folder path.                                                                                             |
 | `logEachStep`  | `boolean`                      | `no`     | Used to enable logging each step.                                                                                |
-| `callback`     | `(data: CallbackData) => void` | `no`     | Callback function called before and after each step.                                                             |
+| `callback`     | `(data: CallbackData) => Promise<void>` | `no`     | Callback function called before and after each step.                                                             |
 
 #### `apitester.createTestCaseFromJsonFile(..)`
 
