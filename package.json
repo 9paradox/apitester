@@ -50,7 +50,9 @@
     "trailingComma": "es5",
     "endOfLine": "auto"
   },
-  "jest": {},
+  "jest": {
+    "testEnvironment": "node"
+  },
   "engines": {
     "node": ">=12"
   },

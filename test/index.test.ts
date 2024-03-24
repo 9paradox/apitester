@@ -9,6 +9,13 @@ server.use(router);
 var httpServer: any;
 
 describe('apitester', () => {
+  const abortFn = jest.fn();
+
+  // @ts-ignore
+  global.AbortController = jest.fn(() => ({
+    abort: abortFn,
+  }));
+
   beforeAll(() => {
     httpServer = server.listen(3000);
   });
