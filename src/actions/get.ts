@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios';
+import Helper from '../utils/helpers';
 
 export type GetOptions = string | AxiosRequestConfig | undefined;
 
@@ -8,7 +9,7 @@ export async function get(options: GetOptions): Promise<any> {
   var config =
     typeof options !== 'string' ? (options as AxiosRequestConfig) : undefined;
 
-  if (!url) throw new Error('Invalid url');
+  if (!url || !Helper.isValidURL(url)) throw new Error('Invalid url');
 
   if (config) {
     config.method = 'GET';

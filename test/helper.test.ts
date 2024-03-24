@@ -78,4 +78,10 @@ describe('Helper', () => {
 
     expect(result).toEqual(['test1.test.json', 'test2.test.json']);
   });
+
+  it('should validate url', () => {
+    expect(Helper.isValidURL('https://example.com')).toBe(true);
+    expect(Helper.isValidURL('example.com')).toBe(false);
+    expect(Helper.isValidURL('')).toBe(false);
+  })
 });

@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios';
+import Helper from '../utils/helpers';
 
 export interface SimplePostConfig {
   url: string;
@@ -15,8 +16,7 @@ export async function post(options: PostOptions): Promise<any> {
   if (!url) url = config?.url;
   if (!reqData) reqData = config?.data;
 
-  if (!url) throw new Error('Invalid url');
-  if (!url) throw new Error('Invalid data');
+  if (!url || !Helper.isValidURL(url)) throw new Error('Invalid url');
 
   if (config) {
     config.method = 'POST';

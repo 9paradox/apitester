@@ -90,6 +90,15 @@ async function resolve(filePath: string) {
   return await import(absolutePath);
 }
 
+function isValidURL(url: string): boolean {
+  try {
+    new URL(url);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
 const Helper = {
   fileExists,
   readFile,
@@ -102,6 +111,7 @@ const Helper = {
   buildTestCaseOptionsFromFile,
   getTestCasesFromFolder,
   resolve,
+  isValidURL,
 };
 
 export default Helper;
