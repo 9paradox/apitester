@@ -83,5 +83,5 @@ describe('Helper', () => {
     expect(Helper.isValidURL('https://example.com')).toBe(true);
     expect(Helper.isValidURL('example.com')).toBe(false);
     expect(Helper.isValidURL('')).toBe(false);
-  })
+  });
 });

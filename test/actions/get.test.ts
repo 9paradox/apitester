@@ -25,5 +25,5 @@ describe('get', () => {
     };
     const result = await get(options);
     expect(result.status).toEqual(200);
-  })
+  });
 });

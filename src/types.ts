@@ -26,7 +26,7 @@ export interface Step {
   startedAt?: string;
   endedAt?: string;
   timeTaken?: StepTime;
-  description?: string
+  description?: string;
 }
 
 interface Error {

@@ -6,8 +6,8 @@ describe('post', () => {
       url: 'https://dummyjson.com/products/add',
       data: {
         title: 'test',
-      }
-    }
+      },
+    };
     const result = await post(option);
     expect(result.status).toEqual(200);
   });
@@ -18,11 +18,11 @@ describe('post', () => {
       method: 'POST',
       data: {
         title: 'test',
-      }
+      },
     };
     const result = await post(options);
     expect(result.status).toEqual(200);
-  })
+  });
 
   it('should perform post http call with headers', async () => {
     const options: PostOptions = {
@@ -33,9 +33,9 @@ describe('post', () => {
       },
       data: {
         title: 'test',
-      }
+      },
     };
     const result = await post(options);
     expect(result.status).toEqual(200);
-  })
+  });
 });
