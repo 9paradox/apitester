@@ -44,9 +44,14 @@ export class TestCase {
         verified: undefined,
       },
     ];
+
     this.stepIndex = 0;
     this.dataSource = {};
     this.options = options;
+
+    if (!this.options?.abortController) {
+      this.options!.abortController = new AbortController();
+    }
 
     if (options?.dataFilePath && !Helper.fileExists(options.dataFilePath)) {
       throw new Error('Data file not found.');
@@ -200,6 +205,13 @@ export class TestCase {
     runner(this, testRunner);
   }
 
+  //todo: all actions to implement signal.abort
+  abort() {
+    if (!this.options?.abortController?.signal?.aborted) {
+      this.options?.abortController?.abort();
+    }
+  }
+
   private async testCaseRunner(): Promise<TestCaseResult> {
     const totalSteps = this.steps.length;
 
@@ -209,7 +221,7 @@ export class TestCase {
 
     var testCaseResults: TestCaseResult = {
       success: false,
-      totalSteps: totalSteps,
+      totalSteps: totalSteps - 1,
       executedSteps: 0,
       lastExecutedStep: 0,
       totalVerificationSteps: totalVerificationSteps,
@@ -235,9 +247,14 @@ export class TestCase {
             message: stepResult.message,
           };
         }
+
+        if (this.options?.abortController?.signal?.aborted) {
+          throw new Error('Aborted by user.');
+        }
       } catch (ex: any) {
         shouldContinue = false;
         testCaseResults.error = {
+          stepIndex: index,
           type: 'exception',
           title: 'Exception occurred on step: ' + index,
           message: ex?.message,

@@ -32,7 +32,10 @@ export default async function performAction(
       inputData = currentStep.inputData
         ? currentStep.inputData
         : lastStep.outputData;
-      outputData = await get(inputData);
+      outputData = await get(
+        inputData,
+        testCase.options?.abortController?.signal
+      );
       break;
 
     case 'post':

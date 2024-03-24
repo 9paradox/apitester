@@ -1,4 +1,3 @@
-import { templates } from 'eta';
 import { FormatDataOptions, formatData } from '../../src/actions/formatData';
 
 describe('formatData', () => {

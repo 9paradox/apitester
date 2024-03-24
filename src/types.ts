@@ -26,12 +26,14 @@ export interface Step {
   startedAt?: string;
   endedAt?: string;
   timeTaken?: StepTime;
+  description?: string
 }
 
 interface Error {
   title: string;
   message?: string;
   exception?: string;
+  stepIndex?: number;
   type: 'error' | 'exception';
 }
 
@@ -73,6 +75,7 @@ export interface TestCaseOptions {
   logPath?: string;
   logEachStep?: boolean;
   callback?: (data: CallbackData) => Promise<void>;
+  abortController?: AbortController;
 }
 
 export interface DataSource {

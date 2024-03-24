@@ -3,7 +3,10 @@ import Helper from '../utils/helpers';
 
 export type GetOptions = string | AxiosRequestConfig | undefined;
 
-export async function get(options: GetOptions): Promise<any> {
+export async function get(
+  options: GetOptions,
+  signal?: AbortSignal
+): Promise<any> {
   const url = typeof options === 'string' ? options : options?.url;
 
   var config =
@@ -16,12 +19,14 @@ export async function get(options: GetOptions): Promise<any> {
     config.validateStatus = (statusNumber) => {
       return true;
     }; //don't throw error
+    config.signal = signal;
   } else {
     config = {
       method: 'GET',
       validateStatus: (statusNumber: number) => {
         return true;
       },
+      signal: signal,
     } as AxiosRequestConfig;
   }
 

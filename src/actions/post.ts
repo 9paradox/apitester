@@ -7,7 +7,10 @@ export interface SimplePostConfig {
 }
 export type PostOptions = SimplePostConfig | AxiosRequestConfig | undefined;
 
-export async function post(options: PostOptions): Promise<any> {
+export async function post(
+  options: PostOptions,
+  signal?: AbortSignal
+): Promise<any> {
   var url = options?.url;
   var reqData = options?.data;
   var config =
@@ -23,12 +26,14 @@ export async function post(options: PostOptions): Promise<any> {
     config.validateStatus = (statusNumber) => {
       return true;
     }; //don't throw error
+    config.signal = signal;
   } else {
     config = {
       method: 'POST',
       validateStatus: (statusNumber: number) => {
         return true;
       },
+      signal: signal,
     } as AxiosRequestConfig;
   }
 
