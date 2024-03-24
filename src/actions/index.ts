@@ -10,6 +10,7 @@ import {
 import { AxiosOptions } from './axiosReq';
 import { BuildDataOptions } from './buildData';
 import { CustomFromOptions } from './customFrom';
+import { FormatDataOptions } from './formatData';
 import { FormatTemplateOptions } from './formatTemplate';
 import { GetOptions } from './get';
 import { PickAndVerifyOptions } from './pickDataAndVerify';
@@ -23,7 +24,7 @@ export interface IActions {
   axios(options: AxiosOptions): TestCase;
   pickData(query: string): TestCase;
   buildData(option: BuildDataOptions): TestCase;
-  formatData(templateData: string): TestCase;
+  formatData(options: FormatDataOptions): TestCase;
   formatTemplate(options: FormatTemplateOptions): TestCase;
   pickAndVerify(options: PickAndVerifyOptions): TestCase;
   verify(option: VerifyOptions): TestCase;

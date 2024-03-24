@@ -25,6 +25,7 @@ import runner from './runner';
 import { VerifyTimeTakenOptions } from './actions/verifyTimeTaken';
 import { BuildDataOptions } from './actions/buildData';
 import { CustomFromOptions } from './actions/customFrom';
+import { FormatDataOptions } from './actions/formatData';
 
 export class TestCase {
   steps: Step[];
@@ -115,8 +116,8 @@ export class TestCase {
     return this;
   }
 
-  formatData(templateData: string): TestCase {
-    this.recordStep('formatData', StepType.Action, templateData);
+  formatData(option: FormatDataOptions): TestCase {
+    this.recordStep('formatData', StepType.Action, option);
     return this;
   }
 
