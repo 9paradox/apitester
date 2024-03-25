@@ -1,5 +1,5 @@
 import Helper from './utils/helpers';
-import performAction from './mapActions';
+import performAction, { PerformActionResult } from './mapActions';
 import {
   Step,
   StepType,
@@ -270,9 +270,10 @@ export class TestCase {
       (s) => s.type == StepType.Verification && s.verified == true
     ).length;
 
-    testCaseResults.success =
-      testCaseResults.totalSuccessfulVerificationSteps ==
-      testCaseResults.totalVerificationSteps;
+    if (!testCaseResults.error)
+      testCaseResults.success =
+        testCaseResults.totalSuccessfulVerificationSteps ==
+        testCaseResults.totalVerificationSteps;
 
     return testCaseResults;
   }
@@ -299,11 +300,24 @@ export class TestCase {
       step: currentStep,
     });
 
-    const { inputData, outputData, verification } = await performAction(
-      this,
-      currentStep,
-      lastStep
-    );
+    let performActionResult: PerformActionResult;
+    var exception = null;
+    try {
+      performActionResult = await performAction(this, currentStep, lastStep);
+    } catch (ex: any) {
+      exception = ex;
+      performActionResult = {
+        inputData: null,
+        outputData: null,
+        verification: {
+          actualData: null,
+          verified: false,
+          message: ex?.message,
+        },
+      };
+    }
+
+    const { inputData, outputData, verification } = performActionResult;
 
     currentStep.endedAt = new Date().toISOString();
 
@@ -320,7 +334,7 @@ export class TestCase {
     if (inputData) this.setInputData(index, inputData);
 
     var stepResult: StepResult = {
-      success: true,
+      success: exception == null,
     };
 
     if (currentStep.type == StepType.Verification) {
@@ -339,6 +353,10 @@ export class TestCase {
     if (this.options?.logEachStep) {
       if (index == 1) await logStepToFile(this.options.logPath!, lastStep);
       await logStepToFile(this.options.logPath!, currentStep);
+    }
+
+    if (exception) {
+      throw exception;
     }
 
     return stepResult;

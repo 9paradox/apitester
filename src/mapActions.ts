@@ -14,11 +14,17 @@ import { verifyTimeTaken } from './actions/verifyTimeTaken';
 import { BuildDataOptions, buildData } from './actions/buildData';
 import { customFrom } from './actions/customFrom';
 
+export interface PerformActionResult {
+  inputData: any;
+  outputData: any;
+  verification: Optional<VerificationResult>;
+}
+
 export default async function performAction(
   testCase: TestCase,
   currentStep: Step,
   lastStep: Step
-) {
+): Promise<PerformActionResult> {
   var inputData: any = null;
   var outputData: any;
   var verification: Optional<VerificationResult> = undefined;
