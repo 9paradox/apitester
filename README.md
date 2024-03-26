@@ -159,12 +159,17 @@ if (!multiTestCaseResult.success) {
   console.log('Testcases failed: ' + multiTestCaseResult.failedTestCases);
 }
 ```
+## Quester - vscode extension
+
+Create and run apitester testcases directly in vscode now. Install [Quester for vscode](https://marketplace.visualstudio.com/items?itemName=9paradox.quester-vscode) from Visual Studio Code marketplace.
+
+![Quester - vscode extension](https://raw.githubusercontent.com/9paradox/quester-vscode/main/assets/quester-vscode-screenshot.png 'Quester for vscode extension screenshot')
 
 ## apitester-creator
 
 Now easily create testcases with the online drag-and-drop tool - [apitester-creator](https://9paradox.com/apitester-creator/).
 
-![Alt text](https://raw.githubusercontent.com/9paradox/apitester-creator/main/screenshot.png 'try-jmespath screenshot')
+![apitester-creator](https://raw.githubusercontent.com/9paradox/apitester-creator/main/screenshot.png 'apitester-creator screenshot')
 
 Export json testcases and run them using `apitester.getJsonTestCasesFromFolder(..)` and `apitester.runTestCases(..)`.
 
