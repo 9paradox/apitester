@@ -10,8 +10,8 @@ import {
   StepResult,
   StepOptions,
   CallbackData,
-  CustomFunction,
   TestRunner,
+  CustomFnOptions,
 } from './types';
 import { FormatTemplateOptions } from './actions/formatTemplate';
 import { VerifyOptions } from './actions/verify';
@@ -24,7 +24,7 @@ import { PostOptions } from './actions/post';
 import runner from './runner';
 import { VerifyTimeTakenOptions } from './actions/verifyTimeTaken';
 import { BuildDataOptions } from './actions/buildData';
-import { CustomFromOptions } from './actions/customFrom';
+import { CustomFnFromOptions } from './actions/customFnFrom';
 import { FormatDataOptions } from './actions/formatData';
 
 export class TestCase {
@@ -162,7 +162,8 @@ export class TestCase {
         'Unable to create step, please check step for type/typo error.'
       );
     }
-    this.recordStep(options.action, stepType, options.inputData);
+    const methodName = options.action.toString();
+    (this as any)[methodName](options.inputData);
     return this;
   }
 
@@ -186,13 +187,13 @@ export class TestCase {
     return this;
   }
 
-  custom(stepType: StepType, fn: CustomFunction): TestCase {
-    this.recordStep('custom', stepType, fn);
+  customFn(options: CustomFnOptions): TestCase {
+    this.recordStep('customFn', options.stepType, options.fn);
     return this;
   }
 
-  customFrom(options: CustomFromOptions): TestCase {
-    this.recordStep('customFrom', options.stepType, options);
+  customFnFrom(options: CustomFnFromOptions): TestCase {
+    this.recordStep('customFnFrom', options.stepType, options);
     return this;
   }
 

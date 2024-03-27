@@ -12,7 +12,7 @@ import { TestCase } from './testcase';
 import { axiosReq } from './actions/axiosReq';
 import { verifyTimeTaken } from './actions/verifyTimeTaken';
 import { BuildDataOptions, buildData } from './actions/buildData';
-import { customFrom } from './actions/customFrom';
+import { customFnFrom } from './actions/customFnFrom';
 
 export interface PerformActionResult {
   inputData: any;
@@ -115,7 +115,7 @@ export default async function performAction(
       outputData = await logStepToFile(currentStep.inputData, lastStep);
       break;
 
-    case 'custom':
+    case 'customFn':
       const customFnResult = await (currentStep.inputData as CustomFunction)(
         testCase,
         currentStep,
@@ -126,8 +126,8 @@ export default async function performAction(
       verification = customFnResult.verification;
       break;
 
-    case 'customFrom':
-      const customFromFn: CustomFunction = await customFrom(
+    case 'customFnFrom':
+      const customFromFn: CustomFunction = await customFnFrom(
         currentStep.inputData
       );
       const customFnFromResult = await customFromFn(

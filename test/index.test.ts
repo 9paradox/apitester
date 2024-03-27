@@ -60,15 +60,18 @@ describe('apitester', () => {
       .pickAndVerify({ query: 'status', expected: [200, 201], toBe: 'in' })
       .pickStep(-5)
       .pickData('data.title')
-      .custom(StepType.Action, async (testCase, currentStep, lastStep) => {
-        var output = test.data('delectus_aut_autem');
-        if (lastStep.outputData == output) {
-          output = (output as string).toUpperCase();
-        }
-        return {
-          inputData: lastStep.outputData,
-          outputData: output,
-        };
+      .customFn({
+        stepType: StepType.Action,
+        fn: async (testCase, currentStep, lastStep) => {
+          var output = test.data('delectus_aut_autem');
+          if (lastStep.outputData == output) {
+            output = (output as string).toUpperCase();
+          }
+          return {
+            inputData: lastStep.outputData,
+            outputData: output,
+          };
+        },
       })
       .verify('DELECTUS AUT AUTEM')
       .buildData({
@@ -91,7 +94,7 @@ describe('apitester', () => {
           step6Title: 'delectus aut autem',
         },
       })
-      .customFrom({
+      .customFnFrom({
         stepType: StepType.Action,
         filePath: './test/customFunctions/my_test_function.js',
         functionName: 'customFunction',

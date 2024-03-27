@@ -95,13 +95,13 @@ const testcase = apitester.createTestCase({...}: TestCaseOptions);
 
 #### TestCaseOptions
 
-| Parameter      | Type                           | Required | Description                                                                                                      |
-| :------------- | :----------------------------- | :------- | :--------------------------------------------------------------------------------------------------------------- |
-| `title`        | `string`                       | `no`     | Title for the test case.                                                                                         |
-| `dataFilePath` | `string`                       | `no`     | File path for JSON data key-value file.                                                                          |
-| `steps`        | `StepOptions[]`                | `no`     | Add steps while creating testcase. Check [type reference](https://github.com/9paradox/apitester#type-reference). |
-| `logPath`      | `string`                       | `no`     | Logging folder path.                                                                                             |
-| `logEachStep`  | `boolean`                      | `no`     | Used to enable logging each step.                                                                                |
+| Parameter      | Type                                    | Required | Description                                                                                                      |
+| :------------- | :-------------------------------------- | :------- | :--------------------------------------------------------------------------------------------------------------- |
+| `title`        | `string`                                | `no`     | Title for the test case.                                                                                         |
+| `dataFilePath` | `string`                                | `no`     | File path for JSON data key-value file.                                                                          |
+| `steps`        | `StepOptions[]`                         | `no`     | Add steps while creating testcase. Check [type reference](https://github.com/9paradox/apitester#type-reference). |
+| `logPath`      | `string`                                | `no`     | Logging folder path.                                                                                             |
+| `logEachStep`  | `boolean`                               | `no`     | Used to enable logging each step.                                                                                |
 | `callback`     | `(data: CallbackData) => Promise<void>` | `no`     | Callback function called before and after each step.                                                             |
 
 #### `apitester.createTestCaseFromJsonFile(..)`
@@ -159,6 +159,7 @@ if (!multiTestCaseResult.success) {
   console.log('Testcases failed: ' + multiTestCaseResult.failedTestCases);
 }
 ```
+
 ## Quester - vscode extension
 
 Create and run apitester testcases directly in vscode now. Install [Quester for vscode](https://marketplace.visualstudio.com/items?itemName=9paradox.quester-vscode) from Visual Studio Code marketplace.
@@ -177,24 +178,24 @@ Export json testcases and run them using `apitester.getJsonTestCasesFromFolder(.
 
 Once a new testcase is created, we can perform multiple steps/actions and finally call `test()` method to execute the test.
 
-| Action (ActionName) | Input Type                      | Return Type | Description                                                                                    |
-| :------------------ | :------------------------------ | :---------- | :--------------------------------------------------------------------------------------------- |
-| `get`               | `GetOptions`                    | `TestCase`  | Perform `GET` http request.                                                                    |
-| `post`              | `PostOptions`                   | `TestCase`  | Perform `POST` http request.                                                                   |
-| `axios`             | `AxiosOptions`                  | `TestCase`  | Perform http request based on [AxiosRequestConfig](https://github.com/axios/axios#axios-api).  |
-| `pickData`          | `string`                        | `TestCase`  | Perform json query to pick data from last step.                                                |
-| `buildData`         | `BuildDataOptions`              | `TestCase`  | Build and merge your data from different steps using json query.                               |
-| `formatData`        | `string`                        | `TestCase`  | Render string template based on input data from last step using [Eta.js](https://eta.js.org/). |
-| `formatTemplate`    | `FormatTemplateOptions`         | `TestCase`  | Render template file based on input data from last step using [Eta.js](https://eta.js.org/).   |
-| `pickAndVerify`     | `PickAndVerifyOptions`          | `TestCase`  | Perform json query to pick data from last step and do a test assert.                           |
-| `verify`            | `VerifyOptions`                 | `TestCase`  | To assert data from last step.                                                                 |
-| `verifyTimeTaken`   | `VerifyTimeTakenOptions`        | `TestCase`  | To assert time taken for last step.                                                            |
-| `pickStep`          | `number`                        | `TestCase`  | To pick output data from specific step. Also supports negative index from current step.        |
-| `addStep`           | `StepOptions`                   | `TestCase`  | Add a steps from JSON object.                                                                  |
-| `custom`            | `StepType` and `CustomFunction` | `TestCase`  | Run custom function as a step.                                                                 |
-| `customFrom`        | `CustomFromOptions`             | `TestCase`  | Run custom function from a file a step.                                                        |
-| `log`               | -                               | `TestCase`  | Last steps will be logged to a file.                                                           |
-| `getStep`           | `number`                        | `Step`      | Returns the specific step with its input and output data.                                      |
+| Action (ActionName) | Input Type               | Return Type | Description                                                                                    |
+| :------------------ | :----------------------- | :---------- | :--------------------------------------------------------------------------------------------- |
+| `get`               | `GetOptions`             | `TestCase`  | Perform `GET` http request.                                                                    |
+| `post`              | `PostOptions`            | `TestCase`  | Perform `POST` http request.                                                                   |
+| `axios`             | `AxiosOptions`           | `TestCase`  | Perform http request based on [AxiosRequestConfig](https://github.com/axios/axios#axios-api).  |
+| `pickData`          | `string`                 | `TestCase`  | Perform json query to pick data from last step.                                                |
+| `buildData`         | `BuildDataOptions`       | `TestCase`  | Build and merge your data from different steps using json query.                               |
+| `formatData`        | `string`                 | `TestCase`  | Render string template based on input data from last step using [Eta.js](https://eta.js.org/). |
+| `formatTemplate`    | `FormatTemplateOptions`  | `TestCase`  | Render template file based on input data from last step using [Eta.js](https://eta.js.org/).   |
+| `pickAndVerify`     | `PickAndVerifyOptions`   | `TestCase`  | Perform json query to pick data from last step and do a test assert.                           |
+| `verify`            | `VerifyOptions`          | `TestCase`  | To assert data from last step.                                                                 |
+| `verifyTimeTaken`   | `VerifyTimeTakenOptions` | `TestCase`  | To assert time taken for last step.                                                            |
+| `pickStep`          | `number`                 | `TestCase`  | To pick output data from specific step. Also supports negative index from current step.        |
+| `addStep`           | `StepOptions`            | `TestCase`  | Add a steps from JSON object.                                                                  |
+| `customFn`          | `CustomFnOptions`        | `TestCase`  | Run custom function as a step.                                                                 |
+| `customFnFrom`      | `CustomFnFromOptions`    | `TestCase`  | Run custom function from a file a step.                                                        |
+| `log`               | -                        | `TestCase`  | Last steps will be logged to a file.                                                           |
+| `getStep`           | `number`                 | `Step`      | Returns the specific step with its input and output data.                                      |
 
 ## Type Reference
 
@@ -295,12 +296,19 @@ Verify time taken by last step.
 | Parameter  | Type        | Required | Description                                                                   |
 | :--------- | :---------- | :------- | :---------------------------------------------------------------------------- |
 | `expected` | `number`    | `yes`    | Expected time.                                                                |
-| `format`   | `ms` or `s` | `yes`    | Compare expected time against ms (microseconds) or s (seconds) of actual time |
+| `format`   | `ms` or `s` | `yes`    | Compare expected time against ms (milliseconds) or s (seconds) of actual time |
 | `toBe`     | `ToBe`      | `yes`    | Comparison type.                                                              |
 
-#### CustomFunction
+#### CustomFnOptions
 
 User provided function to run as a step.
+
+| Parameter  | Type             | Required | Description                      |
+| :--------- | :--------------- | :------- | :------------------------------- |
+| `stepType` | `StepType`       | `yes`    | Type of step.                    |
+| `fn`       | `CustomFunction` | `yes`    | Filepath of the javascript file. |
+
+#### CustomFunction structure
 
 ```javascript
 //custom function input parameter and return type structure
@@ -313,7 +321,7 @@ myFunction = async (testCase: TestCase, currentStep: Step, lastStep: Step) => {
 }
 ```
 
-#### CustomFromOptions
+#### CustomFnFromOptions
 
 User provided function from a external file to run as a step. The user function should follow CustomFunction definition.
 

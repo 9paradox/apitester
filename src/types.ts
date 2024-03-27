@@ -92,7 +92,12 @@ export interface StepOptions {
   inputData: any;
 }
 
-export interface CustomFromReturn {
+export interface CustomFnOptions {
+  stepType: StepType;
+  fn: CustomFunction;
+}
+
+export interface CustomFnFromReturn {
   inputData: any;
   outputData: any;
   verification?: VerificationResult;
@@ -102,7 +107,7 @@ export type CustomFunction = (
   testCase: TestCase,
   currentStep: Step,
   lastStep: Step
-) => Promise<CustomFromReturn>;
+) => Promise<CustomFnFromReturn>;
 
 export interface TestRunner {
   name: 'jest';

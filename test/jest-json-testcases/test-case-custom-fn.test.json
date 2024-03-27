@@ -1,0 +1,19 @@
+{
+    "title": "apitester from json test-case-custom-fn file",
+    "logPath": "./logs",
+    "logEachStep": true,
+    "steps": [
+        {
+            "action": "get",
+            "inputData": "https://dummyjson.com/products/1"
+        },
+        {
+            "action": "customFnFrom",
+            "inputData": {
+                "stepType": "Verification",
+                "filePath": "./test/customFunctions/product_price_verify.js",
+                "functionName": "isValidProductPrice"
+            }
+        }
+    ]
+}
