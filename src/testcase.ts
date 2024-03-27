@@ -246,6 +246,7 @@ export class TestCase {
               ' - ' +
               this.getStep(index).action,
             message: stepResult.message,
+            stepIndex: index,
           };
         }
 

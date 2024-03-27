@@ -193,7 +193,7 @@ Once a new testcase is created, we can perform multiple steps/actions and finall
 | `pickStep`          | `number`                 | `TestCase`  | To pick output data from specific step. Also supports negative index from current step.        |
 | `addStep`           | `StepOptions`            | `TestCase`  | Add a steps from JSON object.                                                                  |
 | `customFn`          | `CustomFnOptions`        | `TestCase`  | Run custom function as a step.                                                                 |
-| `customFnFrom`      | `CustomFnFromOptions`    | `TestCase`  | Run custom function from a file a step.                                                        |
+| `customFnFrom`      | `CustomFnFromOptions`    | `TestCase`  | Run custom function from a javascript file as a step.                                          |
 | `log`               | -                        | `TestCase`  | Last steps will be logged to a file.                                                           |
 | `getStep`           | `number`                 | `Step`      | Returns the specific step with its input and output data.                                      |
 
