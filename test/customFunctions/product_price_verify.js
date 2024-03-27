@@ -8,8 +8,8 @@ async function isValidProductPrice(testCase, currentStep, lastStep) {
     verification: {
       verified: isValidPrice,
       actualData: data.price,
-      message: "Price is valid"
-    }
+      message: 'Price is valid',
+    },
   };
 }
 
