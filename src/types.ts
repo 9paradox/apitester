@@ -68,6 +68,12 @@ export interface CallbackData {
   stepResult?: StepResult;
 }
 
+export interface TestCaseCallbackData {
+  type: 'before' | 'after';
+  filePath: string;
+  testCaseResult?: TestCaseResult;
+}
+
 export interface TestCaseOptions {
   title?: string;
   dataFilePath?: string;

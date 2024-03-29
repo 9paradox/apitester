@@ -132,7 +132,12 @@ describe('apitester', () => {
       './test/json-testcases'
     );
 
-    const multiTestCaseResult = await apitester.runTestCases(testCases);
+    const multiTestCaseResult = await apitester.runTestCases(
+      testCases,
+      async (data) => {
+        if (data.type == 'after') console.log('running ' + data.filePath);
+      }
+    );
 
     if (!multiTestCaseResult.success) {
       console.log('Testcases failed: ' + multiTestCaseResult.failedTestCases);

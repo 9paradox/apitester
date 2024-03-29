@@ -3,6 +3,7 @@ import runner from './runner';
 import { TestCase } from './testcase';
 import {
   MultiTestCaseResult,
+  TestCaseCallbackData,
   TestCaseOptions,
   TestCaseResult,
   TestRunner,
@@ -13,7 +14,10 @@ interface ApiTester {
   createTestCase: (options?: TestCaseOptions) => IActions;
   createTestCaseFromJsonFile: (testCasePath: string) => IActions;
   getJsonTestCasesFromFolder: (folderPath: string) => IActions[];
-  runTestCases: (testCases: IActions[]) => Promise<MultiTestCaseResult>;
+  runTestCases: (
+    testCases: IActions[],
+    callback?: (data: TestCaseCallbackData) => Promise<void>
+  ) => Promise<MultiTestCaseResult>;
   testJsonTestCasesWith: (folderPath: string, testRunner: TestRunner) => void;
 }
 
@@ -27,13 +31,33 @@ export const apitester: ApiTester = {
   getJsonTestCasesFromFolder(folderPath: string) {
     return buildJsonTestCasesFromFolder(folderPath);
   },
-  runTestCases: function (testCases: IActions[]): Promise<MultiTestCaseResult> {
+  runTestCases: function (
+    testCases: IActions[],
+    callback?: (data: TestCaseCallbackData) => Promise<void>
+  ): Promise<MultiTestCaseResult> {
     return new Promise(async (resolve, reject) => {
       var results: TestCaseResult[] = [];
       var success = true;
       var failedTestCaseCount = 0;
+      var index = 0;
       for (const testCase of testCases) {
+        index++;
+        if (callback)
+          await callback({
+            type: 'before',
+            filePath: testCase.filePath ? testCase.filePath : index.toString(),
+            testCaseResult: undefined,
+          });
+
         const result = await runTestCase(testCase);
+
+        if (callback)
+          await callback({
+            type: 'after',
+            filePath: testCase.filePath ? testCase.filePath : index.toString(),
+            testCaseResult: result,
+          });
+
         success = success && result.success;
         failedTestCaseCount = failedTestCaseCount + (result.success ? 0 : 1);
         results.push(result);
@@ -59,10 +83,12 @@ function buildJsonTestCasesFromFolder(folderPath: string): TestCase[] {
   var testCases: TestCase[] = [];
   const testCaseFiles = Helper.getTestCasesFromFolder(folderPath);
   for (const testCaseFile of testCaseFiles) {
-    const testCaseOptions = Helper.buildTestCaseOptionsFromFile(
-      Helper.joinPaths(folderPath, testCaseFile)
-    );
-    testCases.push(new TestCase(testCaseOptions));
+    const filePath = Helper.joinPaths(folderPath, testCaseFile);
+    const testCaseOptions = Helper.buildTestCaseOptionsFromFile(filePath);
+    var testCase = new TestCase(testCaseOptions);
+    testCase.fileName = testCaseFile;
+    testCase.filePath = filePath;
+    testCases.push(testCase);
   }
   return testCases;
 }

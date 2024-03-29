@@ -8,7 +8,7 @@ function test(testRunner: TestRunner, testCase: TestCase) {
       try {
         const testCaseResult = await testCase.test();
         if (testCaseResult.success) {
-          expect(testCaseResult.success).toBe(true);
+          testRunner.expectFunction(testCaseResult.success).toBe(true);
         } else {
           const error =
             'Error message: ' +

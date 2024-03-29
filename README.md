@@ -160,6 +160,8 @@ if (!multiTestCaseResult.success) {
 }
 ```
 
+- `apitester.runTestCases(testCases, callback)` also supports callback `(data: TestCaseCallbackData) => Promise<void>`.
+
 ## Quester - vscode extension
 
 Create and run apitester testcases directly in vscode now. Install [Quester for vscode](https://marketplace.visualstudio.com/items?itemName=9paradox.quester-vscode) from Visual Studio Code marketplace.
@@ -217,6 +219,16 @@ User provided callback function which is called before and after each step.
 | `type`       | `before` or `after` | `yes`    | Used to identify if the callback is called before or after. |
 | `step`       | `Step`              | `yes`    | Current step.                                               |
 | `stepResult` | `StepResult`        | `no`     | Step success result updated in type 'after'.                |
+
+#### TestCaseCallbackData
+
+User provided callback function which is called before and after each testcase running with `apitester.runTestCases(...)`.
+
+| Parameter        | Type                | Required | Description                                                 |
+| :--------------- | :------------------ | :------- | :---------------------------------------------------------- |
+| `type`           | `before` or `after` | `yes`    | Used to identify if the callback is called before or after. |
+| `filePath`       | `string`            | `yes`    | Current testcase file path.                                 |
+| `testCaseResult` | `TestCaseResult`    | `no`     | Testcase success result updated in type 'after'.            |
 
 #### GetOptions
 

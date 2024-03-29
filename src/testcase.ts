@@ -32,6 +32,8 @@ export class TestCase {
   stepIndex: number;
   dataSource: DataSource;
   options?: TestCaseOptions;
+  fileName?: string;
+  filePath?: string;
 
   constructor(options?: TestCaseOptions) {
     this.steps = [

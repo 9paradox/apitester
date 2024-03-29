@@ -19,6 +19,8 @@ import { VerifyOptions } from './verify';
 import { VerifyTimeTakenOptions } from './verifyTimeTaken';
 
 export interface IActions {
+  fileName?: string;
+  filePath?: string;
   get(options?: GetOptions): TestCase;
   post(options?: PostOptions): TestCase;
   axios(options: AxiosOptions): TestCase;
