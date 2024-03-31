@@ -74,15 +74,29 @@ function buildTestCaseOptionsFromFile(testCasePath: string): TestCaseOptions {
   return testCaseOptions;
 }
 
-function getTestCasesFromFolder(folderPath: string) {
+function getTestCasesFromFolder(
+  folderPath: string,
+  supportedFileExtensions?: string[]
+) {
   if (!folderExists(folderPath)) {
     throw new Error('Test-cases folder not found.');
   }
 
+  const _supportedFileExtensions = supportedFileExtensions
+    ? supportedFileExtensions
+    : ['.test.json'];
+
   const testCases = fs
     .readdirSync(folderPath)
-    .filter((file) => file.endsWith('.test.json'));
+    .filter((file) => isFileExtensionSupported(file, _supportedFileExtensions));
   return testCases;
+}
+
+function isFileExtensionSupported(
+  filePath: string,
+  supportedExtensions: string[]
+): boolean {
+  return supportedExtensions.some((extension) => filePath.endsWith(extension));
 }
 
 async function resolve(filePath: string) {

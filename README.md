@@ -139,7 +139,7 @@ Make sure the json test case file follows `TestCaseOptions` schema.
 #### `apitester.getJsonTestCasesFromFolder(..)` and `apitester.runTestCases(..)`
 
 - We can test multiple json testcase from a given folder.
-- Testcase file name must end with `.test.json`, for example `simple-testcase.test.json`.
+- Testcase file name must end with `.test.json`, for example `simple-testcase.test.json`, or else custom file extension list can be provided to `apitester.getJsonTestCasesFromFolder(..)`
 - `apitester.runTestCases(..)` returns `MultiTestCaseResult`.
 
 ```javascript
@@ -151,6 +151,7 @@ Make sure the json test case file follows `TestCaseOptions` schema.
 
 const testCases = apitester.getJsonTestCasesFromFolder(
   'path-to/json-testcases'
+  //,['.test.json', '.apitester'] //custom file extensions (optional)
 );
 
 const multiTestCaseResult = await apitester.runTestCases(testCases);

@@ -1,0 +1,19 @@
+{
+    "title": "apitester from json test-case-3 file",
+    "logPath": "./logs",
+    "logEachStep": true,
+    "steps": [
+        {
+            "action": "get",
+            "inputData": "http://localhost:3000/todos/"
+        },
+        {
+            "action": "pickAndVerify",
+            "inputData": {
+                "query": "status",
+                "expected": 200,
+                "toBe": "=="
+            }
+        }
+    ]
+}

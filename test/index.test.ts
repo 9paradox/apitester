@@ -129,7 +129,8 @@ describe('apitester', () => {
 
   it('should run json test-case files from folder', async () => {
     const testCases = apitester.getJsonTestCasesFromFolder(
-      './test/json-testcases'
+      'd:\\quester_testing\\quester-vscode-examples',
+      ['.test.json', '.apitester']
     );
 
     const multiTestCaseResult = await apitester.runTestCases(

@@ -1,0 +1,259 @@
+{
+  "title": "verify api status",
+  "logPath": "D:\\quester_testing\\quester-vscode-examples\\logs",
+  "logEachStep": false,
+  "steps": [
+    {
+      "id": "get-0-1706471793141",
+      "actionItem": {
+        "index": 0,
+        "name": "get",
+        "type": "ACTION",
+        "color": "blue",
+        "description": "Perform GET http request."
+      },
+      "action": "get",
+      "selected": false,
+      "inputData": "https://www.google.in/",
+      "actionInput": {
+        "inputDataSimple": [
+          {
+            "label": "url",
+            "description": "http url of the request",
+            "type": "string",
+            "element": "input",
+            "value": "https://www.google.in/",
+            "required": true
+          }
+        ],
+        "inputDataAdvance": [
+          {
+            "label": "url",
+            "description": "http url of the request",
+            "type": "string",
+            "element": "input",
+            "value": "",
+            "required": true
+          },
+          {
+            "label": "data",
+            "description": "data of the request in json format",
+            "type": "object",
+            "element": "json",
+            "value": "",
+            "required": true
+          },
+          {
+            "label": "method",
+            "description": "method of the request",
+            "type": "string",
+            "element": "select",
+            "options": [
+              "GET",
+              "POST",
+              "PUT",
+              "DELETE"
+            ],
+            "value": "GET",
+            "required": true
+          },
+          {
+            "label": "params",
+            "description": "params of the request",
+            "type": "object",
+            "element": "textarea",
+            "value": ""
+          },
+          {
+            "label": "headers",
+            "description": "headers of the request in json format",
+            "type": "object",
+            "element": "json",
+            "value": ""
+          },
+          {
+            "label": "responseType",
+            "description": "response type of the request",
+            "type": "string",
+            "element": "input",
+            "value": ""
+          },
+          {
+            "label": "timeout",
+            "description": "timeout of the request",
+            "type": "number",
+            "element": "input",
+            "value": ""
+          },
+          {
+            "label": "auth",
+            "description": "auth of the request in json format",
+            "type": "object",
+            "element": "json",
+            "value": ""
+          }
+        ],
+        "inputDataRaw": [
+          {
+            "label": "useFromLastStep",
+            "description": "check to input data from last step output data",
+            "type": "boolean",
+            "element": "checkbox",
+            "value": "false"
+          },
+          {
+            "label": "raw",
+            "description": "raw data in json format",
+            "type": "object",
+            "element": "json",
+            "value": ""
+          }
+        ]
+      },
+      "selectedActionInput": "simple"
+    },
+    {
+      "id": "log-2-1711391089819",
+      "actionItem": {
+        "index": 10,
+        "name": "log",
+        "type": "OTHER",
+        "color": "gray",
+        "description": "Last steps will be logged to a file."
+      },
+      "action": "log",
+      "selected": false,
+      "inputData": null,
+      "actionInput": {
+        "inputDataSimple": null,
+        "inputDataAdvance": null,
+        "inputDataRaw": null
+      },
+      "selectedActionInput": "raw"
+    },
+    {
+      "id": "pickStep-3-1711391092869",
+      "actionItem": {
+        "index": 8,
+        "name": "pickStep",
+        "type": "ACTION",
+        "color": "blue",
+        "description": "To pick output data from specific step."
+      },
+      "action": "pickStep",
+      "selected": false,
+      "inputData": 1,
+      "actionInput": {
+        "inputDataSimple": [
+          {
+            "label": "stepNumber",
+            "description": "to pick output data from specific step",
+            "type": "number",
+            "element": "input",
+            "value": "1",
+            "required": true
+          }
+        ],
+        "inputDataAdvance": null,
+        "inputDataRaw": [
+          {
+            "label": "useFromLastStep",
+            "description": "check to input data from last step output data",
+            "type": "boolean",
+            "element": "checkbox",
+            "value": "false"
+          },
+          {
+            "label": "raw",
+            "description": "raw data in json format",
+            "type": "object",
+            "element": "json",
+            "value": ""
+          }
+        ]
+      },
+      "selectedActionInput": "simple"
+    },
+    {
+      "id": "pickAndVerify-1-1711385244194",
+      "actionItem": {
+        "index": 6,
+        "name": "pickAndVerify",
+        "type": "VERIFICATION",
+        "color": "green",
+        "description": "Perform json query to pick data from last step and do a test assert."
+      },
+      "action": "pickAndVerify",
+      "selected": false,
+      "inputData": {
+        "query": "status",
+        "expected": 200,
+        "toBe": "equal"
+      },
+      "actionInput": {
+        "inputDataSimple": [
+          {
+            "label": "query",
+            "description": "jmespath or jsonata query to pick data",
+            "type": "string",
+            "element": "textarea",
+            "value": "status",
+            "required": true
+          },
+          {
+            "label": "expected",
+            "description": "expected value",
+            "type": "object",
+            "element": "textarea",
+            "value": "200",
+            "required": true
+          },
+          {
+            "label": "toBe",
+            "description": "compare value with expected value",
+            "type": "string",
+            "element": "select",
+            "options": [
+              "equal",
+              "==",
+              "notEqual",
+              "!=",
+              "greaterThan",
+              ">",
+              "greaterThanOrEqual",
+              ">=",
+              "lessThan",
+              "<",
+              "lessThanOrEqual",
+              "<=",
+              "in",
+              "notIn",
+              "contains"
+            ],
+            "value": "equal",
+            "required": true
+          }
+        ],
+        "inputDataAdvance": null,
+        "inputDataRaw": [
+          {
+            "label": "useFromLastStep",
+            "description": "check to input data from last step output data",
+            "type": "boolean",
+            "element": "checkbox",
+            "value": "false"
+          },
+          {
+            "label": "raw",
+            "description": "raw data in json format",
+            "type": "object",
+            "element": "json",
+            "value": ""
+          }
+        ]
+      },
+      "selectedActionInput": "simple"
+    }
+  ],
+  "delay": 2000
+}

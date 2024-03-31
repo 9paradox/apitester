@@ -32,6 +32,7 @@ export class TestCase {
   stepIndex: number;
   dataSource: DataSource;
   options?: TestCaseOptions;
+  title?: string;
   fileName?: string;
   filePath?: string;
 
@@ -46,6 +47,8 @@ export class TestCase {
         verified: undefined,
       },
     ];
+
+    this.title = options?.title;
 
     this.stepIndex = 0;
     this.dataSource = {};

@@ -19,6 +19,7 @@ import { VerifyOptions } from './verify';
 import { VerifyTimeTakenOptions } from './verifyTimeTaken';
 
 export interface IActions {
+  title?: string;
   fileName?: string;
   filePath?: string;
   get(options?: GetOptions): TestCase;

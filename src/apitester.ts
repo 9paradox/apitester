@@ -13,12 +13,19 @@ import Helper from './utils/helpers';
 interface ApiTester {
   createTestCase: (options?: TestCaseOptions) => IActions;
   createTestCaseFromJsonFile: (testCasePath: string) => IActions;
-  getJsonTestCasesFromFolder: (folderPath: string) => IActions[];
+  getJsonTestCasesFromFolder: (
+    folderPath: string,
+    supportedFileExtensions?: string[]
+  ) => IActions[];
   runTestCases: (
     testCases: IActions[],
     callback?: (data: TestCaseCallbackData) => Promise<void>
   ) => Promise<MultiTestCaseResult>;
-  testJsonTestCasesWith: (folderPath: string, testRunner: TestRunner) => void;
+  testJsonTestCasesWith: (
+    folderPath: string,
+    testRunner: TestRunner,
+    supportedFileExtensions?: string[]
+  ) => void;
 }
 
 export const apitester: ApiTester = {
@@ -28,8 +35,11 @@ export const apitester: ApiTester = {
   createTestCaseFromJsonFile: (testCasePath: string) => {
     return new TestCase(Helper.buildTestCaseOptionsFromFile(testCasePath));
   },
-  getJsonTestCasesFromFolder(folderPath: string) {
-    return buildJsonTestCasesFromFolder(folderPath);
+  getJsonTestCasesFromFolder(
+    folderPath: string,
+    supportedFileExtensions?: string[]
+  ) {
+    return buildJsonTestCasesFromFolder(folderPath, supportedFileExtensions);
   },
   runTestCases: function (
     testCases: IActions[],
@@ -72,23 +82,41 @@ export const apitester: ApiTester = {
       resolve(multiTestCaseResult);
     });
   },
-  testJsonTestCasesWith(folderPath: string, testRunner: TestRunner) {
-    buildJsonTestCasesFromFolder(folderPath).forEach((testCase) => {
-      runner(testCase, testRunner);
-    });
+  testJsonTestCasesWith(
+    folderPath: string,
+    testRunner: TestRunner,
+    supportedFileExtensions?: string[]
+  ) {
+    buildJsonTestCasesFromFolder(folderPath, supportedFileExtensions).forEach(
+      (testCase) => {
+        runner(testCase, testRunner);
+      }
+    );
   },
 };
 
-function buildJsonTestCasesFromFolder(folderPath: string): TestCase[] {
+function buildJsonTestCasesFromFolder(
+  folderPath: string,
+  supportedFileExtensions?: string[]
+): TestCase[] {
   var testCases: TestCase[] = [];
-  const testCaseFiles = Helper.getTestCasesFromFolder(folderPath);
+  const testCaseFiles = Helper.getTestCasesFromFolder(
+    folderPath,
+    supportedFileExtensions
+  );
   for (const testCaseFile of testCaseFiles) {
-    const filePath = Helper.joinPaths(folderPath, testCaseFile);
-    const testCaseOptions = Helper.buildTestCaseOptionsFromFile(filePath);
-    var testCase = new TestCase(testCaseOptions);
-    testCase.fileName = testCaseFile;
-    testCase.filePath = filePath;
-    testCases.push(testCase);
+    try {
+      const filePath = Helper.joinPaths(folderPath, testCaseFile);
+      const testCaseOptions = Helper.buildTestCaseOptionsFromFile(filePath);
+      var testCase = new TestCase(testCaseOptions);
+      testCase.title = testCaseOptions.title;
+      testCase.fileName = testCaseFile;
+      testCase.filePath = filePath;
+      testCases.push(testCase);
+    } catch (err: any) {
+      console.log('Error while loading test case: ' + testCaseFile, err);
+      continue;
+    }
   }
   return testCases;
 }
