@@ -100,6 +100,16 @@ describe('apitester', () => {
         functionName: 'customFunction',
       })
       .verify('DELECTUS AUT AUTEM')
+      .inputData({
+        title: 'some input data',
+      })
+      .pickAndVerify({
+        query: 'title',
+        expected: 'some input data',
+        toBe: '==',
+      })
+      .inputData('lol')
+      .verify('lol')
       .test();
 
     if (!testResult.success) {

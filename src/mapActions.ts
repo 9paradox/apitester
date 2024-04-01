@@ -13,6 +13,7 @@ import { axiosReq } from './actions/axiosReq';
 import { verifyTimeTaken } from './actions/verifyTimeTaken';
 import { BuildDataOptions, buildData } from './actions/buildData';
 import { customFnFrom } from './actions/customFnFrom';
+import { inputAsOutput } from './actions/inputAsOutput';
 
 export interface PerformActionResult {
   inputData: any;
@@ -56,6 +57,10 @@ export default async function performAction(
         ? currentStep.inputData
         : lastStep.outputData;
       outputData = await axiosReq(inputData);
+      break;
+
+    case 'inputData':
+      outputData = inputAsOutput(currentStep.inputData);
       break;
 
     case 'pickData':

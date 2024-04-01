@@ -131,6 +131,11 @@ export class TestCase {
     return this;
   }
 
+  inputData(data: any): TestCase {
+    this.recordStep('inputData', StepType.Action, data);
+    return this;
+  }
+
   pickData(query: string): TestCase {
     this.recordStep('pickData', StepType.Action, query);
     return this;

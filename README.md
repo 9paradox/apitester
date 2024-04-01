@@ -186,6 +186,7 @@ Once a new testcase is created, we can perform multiple steps/actions and finall
 | `get`               | `GetOptions`             | `TestCase`  | Perform `GET` http request.                                                                    |
 | `post`              | `PostOptions`            | `TestCase`  | Perform `POST` http request.                                                                   |
 | `axios`             | `AxiosOptions`           | `TestCase`  | Perform http request based on [AxiosRequestConfig](https://github.com/axios/axios#axios-api).  |
+| `inputData`         | `any`                    | `TestCase`  | Holds input data for next step.                                                                |
 | `pickData`          | `string`                 | `TestCase`  | Perform json query to pick data from last step.                                                |
 | `buildData`         | `BuildDataOptions`       | `TestCase`  | Build and merge your data from different steps using json query.                               |
 | `formatData`        | `string`                 | `TestCase`  | Render string template based on input data from last step using [Eta.js](https://eta.js.org/). |

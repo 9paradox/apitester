@@ -25,6 +25,7 @@ export interface IActions {
   get(options?: GetOptions): TestCase;
   post(options?: PostOptions): TestCase;
   axios(options: AxiosOptions): TestCase;
+  inputData(data: any): TestCase;
   pickData(query: string): TestCase;
   buildData(option: BuildDataOptions): TestCase;
   formatData(options: FormatDataOptions): TestCase;
